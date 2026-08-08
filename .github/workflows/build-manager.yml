@@ -24,7 +24,6 @@ on:
       - '.github/workflows/ddk-lkm.yml'
       - '.github/workflows/ksud.yml'
       - '.github/workflows/ksud-extra.yml'
-  workflow_dispatch:
       - '.github/scripts/setup-rust-build.sh'
       - 'repack_apk.py'
       - 'manager/**'
@@ -32,6 +31,7 @@ on:
       - 'userspace/**'
       - 'Cargo.lock'
       - 'Cargo.toml'
+  workflow_dispatch:
   workflow_call:
 
 jobs:
