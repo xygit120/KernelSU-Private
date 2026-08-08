@@ -8,3 +8,7 @@ AGENTS.md
 __pycache__
 /dist
 /repack-config.json
+# Private build artifacts
+ksu-keystore.jks
+.ksu-keystore.pass
+.ksu-certs/

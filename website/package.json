@@ -4,7 +4,7 @@
   "description": "KernelSU official website: https://kernelsu.org",
   "main": "index.js",
   "repository": "https://kernelsu.org",
-  "author": "weishu",
+  "author": "KSU Private Build",
   "license": "MIT",
   "devDependencies": {
     "vitepress": "^1.6.4",

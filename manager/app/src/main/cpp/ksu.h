@@ -1,5 +1,5 @@
 //
-// Created by weishu on 2022/12/9.
+// Private build of KernelSU Manager
 //
 
 #ifndef KERNELSU_KSU_H

@@ -1,5 +1,5 @@
 //
-// Created by weishu on 2022/12/9.
+// Private build of KernelSU Manager
 //
 
 #include <sys/prctl.h>

@@ -484,9 +484,10 @@ enum Initrc {
 }
 
 pub fn run() -> Result<()> {
+    // Silent mode: ksud never writes anything to logcat.
     android_logger::init_once(
         Config::default()
-            .with_max_level(crate::debug_select!(LevelFilter::Trace, LevelFilter::Info))
+            .with_max_level(LevelFilter::Off)
             .with_tag("KernelSU"),
     );
 

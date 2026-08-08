@@ -119,34 +119,29 @@ KSU_NEW_DCACHE_FLUSH := $(shell grep -q __flush_dcache_area $(srctree)/arch/arm6
 $(info -- KSU_NEW_DCACHE_FLUSH: $(KSU_NEW_DCACHE_FLUSH))
 
 
+# Private build: the official KernelSU manager signature is NOT recognized.
+# These values are placeholders; run ./build_private.sh (or pass
+# KSU_EXPECTED_SIZE=0x.... KSU_EXPECTED_HASH=... when invoking make)
+# to fill in the real certificate size/hash of your manager APK.
 ifndef KSU_EXPECTED_SIZE
-KSU_EXPECTED_SIZE := 0x033b
+KSU_EXPECTED_SIZE := 0x0337
 endif
 
 ifndef KSU_EXPECTED_HASH
-KSU_EXPECTED_HASH := c371061b19d8c7d7d6133c6a9bafe198fa944e50c1b31c9d8daa8d7f1fc2d2d6
+KSU_EXPECTED_HASH := 736b4e2cc7070034b3b550151a51a0c98245644d0f4de362918ed2ce8df52291
 endif
 
-ifdef KSU_MANAGER_PACKAGE
+# Always enforce the manager package name (com.android.video).
+# Official APKs can never pass even if signed with the same certificate.
+KSU_MANAGER_PACKAGE ?= com.android.video
 ccflags-y += -DKSU_MANAGER_PACKAGE=\"$(KSU_MANAGER_PACKAGE)\"
 $(info -- KernelSU Manager package name: $(KSU_MANAGER_PACKAGE))
-endif
 
 $(info -- KernelSU Manager signature size: $(KSU_EXPECTED_SIZE))
 $(info -- KernelSU Manager signature hash: $(KSU_EXPECTED_HASH))
 
 ccflags-y += -DEXPECTED_SIZE=$(KSU_EXPECTED_SIZE)
 ccflags-y += -DEXPECTED_HASH=\"$(KSU_EXPECTED_HASH)\"
-
-ifdef KSU_EXPECTED_SIZE2
-ifndef KSU_EXPECTED_HASH2
-$(error KSU_EXPECTED_HASH2 must be set when KSU_EXPECTED_SIZE2 is set)
-endif
-ccflags-y += -DEXPECTED_SIZE2=$(KSU_EXPECTED_SIZE2)
-ccflags-y += -DEXPECTED_HASH2=\"$(KSU_EXPECTED_HASH2)\"
-$(info -- KernelSU Manager signature size2: $(KSU_EXPECTED_SIZE2))
-$(info -- KernelSU Manager signature hash2: $(KSU_EXPECTED_HASH2))
-endif
 
 ccflags-y += -DKSU_NEW_DCACHE_FLUSH=$(KSU_NEW_DCACHE_FLUSH)
 
