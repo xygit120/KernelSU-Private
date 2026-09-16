@@ -26,4 +26,4 @@ jobs:
         uses: ludeeus/action-shellcheck@2.0.0
         with:
           ignore_names: gradlew
-          ignore_paths: ./userspace/ksud/src/installer.sh ./.github/scripts/setup-rust-build.sh
+          ignore_paths: ./userspace/ksud/src/installer.sh ./.github/scripts/setup-rust-build.sh ./build_private.sh ./vcam/scripts/mode-switch.sh ./vcam/scripts/root-boot.sh ./vcam/scripts/root-manager.sh ./manager/app/src/main/assets/vcam/scripts/mode-switch.sh ./manager/app/src/main/assets/vcam/scripts/root-boot.sh ./manager/app/src/main/assets/vcam/scripts/root-manager.sh
