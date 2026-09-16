@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.android.video.R
 import com.android.video.magica.KsuSetup
-import com.android.video.magica.MagicaService
 import com.android.video.ui.LocalUiMode
 import com.android.video.ui.UiMode
 import com.android.video.ui.component.dialog.rememberLoadingDialog
@@ -56,12 +55,10 @@ fun HomePager(
         onOpenUrl = uriHandler::openUri,
         onJailbreakClick = {
             loadingDialog.showLoading()
-            if (KsuSetup.shizukuAvailable() && !KsuSetup.shizukuUsable()) {
-                KsuSetup.requestShizukuPermission(context)
-            } else {
-                KsuSetup.ensurePermissiveAsync(context)
-            }
-            context.startService(Intent(context, MagicaService::class.java))
+            // Shizuku path is driven from inside KsuSetup (runs the exploit as shell).
+            // MagicaService is intentionally not started: its app-zygote bootstrap
+            // needs a framework restart, which reboots this ROM.
+            KsuSetup.ensurePermissiveAsync(context)
             // Manager will be force-stopped and restarted by late-load on success.
             // If that doesn't happen within timeout, jailbreak likely failed.
             scope.launch(Dispatchers.IO) {

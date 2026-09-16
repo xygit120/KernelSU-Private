@@ -108,7 +108,14 @@ public final class KsuSetup {
                     if (shizukuUsable()) {
                         runViaShizuku(app);
                     } else if (shizukuAvailable()) {
-                        logTo(app, "shizuku available but not granted; waiting for permission");
+                        logTo(app, "shizuku available but not granted; requesting on main thread");
+                        new android.os.Handler(android.os.Looper.getMainLooper())
+                                .post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        requestShizukuPermission(app);
+                                    }
+                                });
                         return;
                     } else {
                         logTo(app, "shizuku not available, fallback to direct app-context run");
