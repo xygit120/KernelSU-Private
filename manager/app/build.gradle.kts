@@ -191,6 +191,8 @@ dependencies {
     implementation(libs.com.github.topjohnwu.libsu.io)
 
     implementation(libs.dev.rikka.rikkax.parcelablelist)
+    implementation(libs.dev.rikka.shizuku.api)
+    implementation(libs.dev.rikka.shizuku.provider)
 
     implementation(libs.kotlinx.coroutines.core)
 

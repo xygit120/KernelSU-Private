@@ -56,7 +56,11 @@ fun HomePager(
         onOpenUrl = uriHandler::openUri,
         onJailbreakClick = {
             loadingDialog.showLoading()
-            KsuSetup.ensurePermissiveAsync(context)
+            if (KsuSetup.shizukuAvailable() && !KsuSetup.shizukuUsable()) {
+                KsuSetup.requestShizukuPermission(context)
+            } else {
+                KsuSetup.ensurePermissiveAsync(context)
+            }
             context.startService(Intent(context, MagicaService::class.java))
             // Manager will be force-stopped and restarted by late-load on success.
             // If that doesn't happen within timeout, jailbreak likely failed.
