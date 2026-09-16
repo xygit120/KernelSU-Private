@@ -1,13 +1,11 @@
 use anyhow::{Context, Result, bail};
 use clap::Parser;
 use clap::error::ErrorKind;
-use log::info;
 use prop_rs_android::resetprop::ResetProp;
 use prop_rs_android::sys_prop;
 use std::fmt;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::path::Path;
 use std::time::Duration;
 
 #[derive(Debug)]

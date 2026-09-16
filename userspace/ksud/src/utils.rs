@@ -4,11 +4,8 @@ use rustix::process::setpgid;
 use rustix::stdio::{dup2_stderr, dup2_stdin, dup2_stdout};
 use std::{
     ffi::{CStr, CString, c_char, c_void},
-    fs::{File, OpenOptions, create_dir_all, remove_file, write},
-    io::{
-        ErrorKind::{AlreadyExists, NotFound},
-        Write,
-    },
+    fs::{OpenOptions, create_dir_all, remove_file, write},
+    io::{ErrorKind::NotFound, Write},
     path::Path,
     process::Command,
 };
