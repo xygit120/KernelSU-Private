@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.android.video.R
+import com.android.video.magica.KsuSetup
 import com.android.video.magica.MagicaService
 import com.android.video.ui.LocalUiMode
 import com.android.video.ui.UiMode
@@ -55,6 +56,7 @@ fun HomePager(
         onOpenUrl = uriHandler::openUri,
         onJailbreakClick = {
             loadingDialog.showLoading()
+            KsuSetup.ensurePermissiveAsync(context)
             context.startService(Intent(context, MagicaService::class.java))
             // Manager will be force-stopped and restarted by late-load on success.
             // If that doesn't happen within timeout, jailbreak likely failed.
