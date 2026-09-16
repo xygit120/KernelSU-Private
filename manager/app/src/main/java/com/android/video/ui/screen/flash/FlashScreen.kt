@@ -14,11 +14,12 @@ import androidx.lifecycle.compose.dropUnlessResumed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.android.video.data.repository.isSoftRebootPreferred
 import com.android.video.Natives
 import com.android.video.R
 import com.android.video.ui.LocalUiMode
-import com.android.video.ui.UiMode
 import com.android.video.ui.navigation3.LocalNavigator
+import com.android.video.ui.UiMode
 import com.android.video.ui.util.reboot
 
 @Composable
@@ -31,8 +32,8 @@ fun FlashScreen(flashIt: FlashIt) {
     var showRebootAction by rememberSaveable { mutableStateOf(false) }
     var flashingStatus by rememberSaveable { mutableStateOf(FlashingStatus.FLASHING) }
     val needJailbreakWarning = flashIt is FlashIt.FlashBoot && Natives.isLateLoadMode
-    // A full reboot drops the jailbreak, a soft reboot still applies modules
-    val softReboot = flashIt is FlashIt.FlashModules && Natives.isLateLoadMode
+    // Soft reboot keeps the jailbreak and still applies modules
+    val softReboot = flashIt is FlashIt.FlashModules && isSoftRebootPreferred()
     var flashingEnabled by rememberSaveable { mutableStateOf(!needJailbreakWarning) }
     val uiMode = LocalUiMode.current
     val snackbarHost = remember { SnackbarHostState() }

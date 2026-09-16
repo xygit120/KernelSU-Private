@@ -131,12 +131,11 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import com.android.video.Natives
-import com.android.video.R
 import com.android.video.data.model.Module
 import com.android.video.data.model.ModuleUpdateInfo
-import com.android.video.ui.component.ObserveAsEvents
-import com.android.video.ui.component.ScrollToTopOnChange
+import com.android.video.data.repository.isSoftRebootPreferred
+import com.android.video.Natives
+import com.android.video.R
 import com.android.video.ui.component.dialog.rememberConfirmDialog
 import com.android.video.ui.component.dialog.rememberLoadingDialog
 import com.android.video.ui.component.material.ExpressiveScaffold
@@ -144,7 +143,9 @@ import com.android.video.ui.component.material.ExpressiveSwitch
 import com.android.video.ui.component.material.SearchAppBar
 import com.android.video.ui.component.material.SnackBarHost
 import com.android.video.ui.component.material.TonalCard
+import com.android.video.ui.component.ObserveAsEvents
 import com.android.video.ui.component.rebootlistpopup.RebootListPopup
+import com.android.video.ui.component.ScrollToTopOnChange
 import com.android.video.ui.component.statustag.StatusTag
 import com.android.video.ui.util.reboot
 
@@ -257,8 +258,8 @@ fun ModulePagerMaterial(
                 // Cancel the previous reboot snackbar so a new one replaces it instead of queueing
                 snackbarJob.value?.cancel()
                 snackBarHost.currentSnackbarData?.dismiss()
-                // A full reboot drops the jailbreak, a soft reboot still applies module changes
-                val softReboot = Natives.isLateLoadMode
+                // Soft reboot keeps the jailbreak and still applies module changes
+                val softReboot = isSoftRebootPreferred()
                 snackbarJob.value = scope.launch {
                     val result = snackBarHost.showSnackbar(
                         message = event.message,

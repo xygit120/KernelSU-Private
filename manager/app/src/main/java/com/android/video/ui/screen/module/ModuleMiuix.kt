@@ -108,22 +108,23 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import com.android.video.Natives
-import com.android.video.R
 import com.android.video.data.model.Module
 import com.android.video.data.model.ModuleUpdateInfo
-import com.android.video.ui.component.ListPopupDefaults
-import com.android.video.ui.component.ObserveAsEvents
-import com.android.video.ui.component.ScrollToTopOnChange
-import com.android.video.ui.component.SearchStatus
+import com.android.video.data.repository.isSoftRebootPreferred
+import com.android.video.Natives
+import com.android.video.R
 import com.android.video.ui.component.dialog.rememberConfirmDialog
 import com.android.video.ui.component.dialog.rememberLoadingDialog
+import com.android.video.ui.component.ListPopupDefaults
 import com.android.video.ui.component.miuix.SearchBarFake
 import com.android.video.ui.component.miuix.SearchBox
 import com.android.video.ui.component.miuix.SearchPager
+import com.android.video.ui.component.ObserveAsEvents
 import com.android.video.ui.component.rebootlistpopup.RebootListPopupMiuix
-import com.android.video.ui.theme.LocalEnableBlur
+import com.android.video.ui.component.ScrollToTopOnChange
+import com.android.video.ui.component.SearchStatus
 import com.android.video.ui.theme.isInDarkTheme
+import com.android.video.ui.theme.LocalEnableBlur
 import com.android.video.ui.util.BlurredBar
 import com.android.video.ui.util.getFileName
 import com.android.video.ui.util.reboot
@@ -239,8 +240,8 @@ fun ModulePagerMiuix(
                 // Cancel the previous reboot snackbar so a new one replaces it instead of queueing
                 snackbarJob.value?.cancel()
                 snackbarHostState.newestSnackbarData()?.dismiss()
-                // A full reboot drops the jailbreak, a soft reboot still applies module changes
-                val softReboot = Natives.isLateLoadMode
+                // Soft reboot keeps the jailbreak and still applies module changes
+                val softReboot = isSoftRebootPreferred()
                 snackbarJob.value = scope.launch {
                     val result = snackbarHostState.showSnackbar(
                         message = event.message,

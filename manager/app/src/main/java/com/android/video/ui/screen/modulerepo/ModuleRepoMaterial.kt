@@ -92,21 +92,22 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.android.video.R
 import com.android.video.data.model.RepoModule
-import com.android.video.ui.component.ScrollToTopOnChange
+import com.android.video.R
 import com.android.video.ui.component.dialog.ConfirmDialogHandle
 import com.android.video.ui.component.dialog.rememberConfirmDialog
 import com.android.video.ui.component.markdown.GithubMarkdown
 import com.android.video.ui.component.material.ExpressiveScaffold
 import com.android.video.ui.component.material.ExpressiveTabRow
+import com.android.video.ui.component.material.expressiveTopAppBarColors
 import com.android.video.ui.component.material.SearchAppBar
 import com.android.video.ui.component.material.SegmentedColumn
 import com.android.video.ui.component.material.SegmentedItemContainer
 import com.android.video.ui.component.material.SegmentedListItem
 import com.android.video.ui.component.material.TonalCard
 import com.android.video.ui.component.material.TopBarBackButton
-import com.android.video.ui.component.material.expressiveTopAppBarColors
+import com.android.video.ui.component.PagerNavigationSpringSpec
+import com.android.video.ui.component.ScrollToTopOnChange
 import com.android.video.ui.component.statustag.StatusTag
 import com.android.video.ui.util.download
 import com.android.video.ui.util.rememberContentReady
@@ -431,6 +432,7 @@ fun ModuleRepoDetailScreenMaterial(
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
+                overscrollEffect = null,
             ) { page ->
                 val paddedInnerPadding = PaddingValues(
                     top = innerPadding.calculateTopPadding() + 56.dp + 8.dp,
@@ -473,7 +475,12 @@ fun ModuleRepoDetailScreenMaterial(
             ExpressiveTabRow(
                 selectedTabIndex = pagerState.currentPage,
                 tabs = tabs,
-                onTabClick = { scope.launch { pagerState.animateScrollToPage(it) } },
+                onTabClick = { scope.launch {
+                    pagerState.animateScrollToPage(
+                        page = it,
+                        animationSpec = PagerNavigationSpringSpec,
+                    )
+                } },
                 modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
             )
         }

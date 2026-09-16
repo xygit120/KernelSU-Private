@@ -12,3 +12,4 @@ __pycache__
 ksu-keystore.jks
 .ksu-keystore.pass
 .ksu-certs/
+/userspace/ksud/.lkm_image_bootstrap.o

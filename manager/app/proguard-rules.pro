@@ -16,4 +16,9 @@
 # Keep the bug-report / log-collection helpers (they collect system
 # logs on demand via shell, they do NOT emit logs themselves).
 -keep class com.android.video.ui.util.LogEvent { *; }
-# CI build trigger
+
+# Protobuf
+-shrinkunusedprotofields
+
+# Commons-compress
+-dontwarn com.github.luben.zstd.**

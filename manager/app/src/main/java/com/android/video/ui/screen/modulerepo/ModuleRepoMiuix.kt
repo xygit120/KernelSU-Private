@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -76,18 +75,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.android.video.R
-import com.android.video.ui.component.ListPopupDefaults
-import com.android.video.ui.component.ScrollToTopOnChange
-import com.android.video.ui.component.SearchStatus
 import com.android.video.ui.component.dialog.ConfirmDialogHandle
 import com.android.video.ui.component.dialog.rememberConfirmDialog
+import com.android.video.ui.component.ListPopupDefaults
 import com.android.video.ui.component.markdown.GithubMarkdown
+import com.android.video.ui.component.miuix.deferredTopPadding
 import com.android.video.ui.component.miuix.SearchBarFake
 import com.android.video.ui.component.miuix.SearchBox
 import com.android.video.ui.component.miuix.SearchPager
-import com.android.video.ui.component.miuix.deferredTopPadding
-import com.android.video.ui.theme.LocalEnableBlur
+import com.android.video.ui.component.PagerNavigationSpringSpec
+import com.android.video.ui.component.ScrollToTopOnChange
+import com.android.video.ui.component.SearchStatus
 import com.android.video.ui.theme.isInDarkTheme
+import com.android.video.ui.theme.LocalEnableBlur
 import com.android.video.ui.util.BlurredBar
 import com.android.video.ui.util.download
 import com.android.video.ui.util.rememberBlurBackdrop
@@ -1091,7 +1091,10 @@ fun ModuleRepoDetailScreenMiuix(
                             selectedTabIndex = pagerState.currentPage,
                             onTabSelected = { index ->
                                 coroutineScope.launch {
-                                    pagerState.animateScrollToPage(page = index, animationSpec = tween(easing = EaseInOut))
+                                    pagerState.animateScrollToPage(
+                                        page = index,
+                                        animationSpec = PagerNavigationSpringSpec,
+                                    )
                                 }
                             },
                             colors = TabRowDefaults.tabRowColors(
@@ -1109,6 +1112,7 @@ fun ModuleRepoDetailScreenMiuix(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize(),
+            overscrollEffect = null,
         ) { page ->
             val innerPadding = PaddingValues(
                 top = innerPadding.calculateTopPadding(),
