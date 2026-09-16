@@ -4,7 +4,6 @@
     <string name="home_click_to_learn_kernelsu">जानें कि KernelSU कैसे स्थापित करें और मॉड्यूल का उपयोग कैसे करें</string>
     <string name="selinux_status_unknown">अज्ञात</string>
     <string name="show_system_apps">सिस्टम एप्प दिखाए</string>
-    <string name="profile_umount_modules">मॉड्यूल्स अनमाउंट करें</string>
     <string name="send_log">लॉग भेजे</string>
     <string name="selinux_status_disabled">डिसेबल्ड (बंद)</string>
     <string name="home_support_title">हमें प्रोत्साहन दें</string>
@@ -12,15 +11,12 @@
     <string name="manager_changelog">क्या बदलाव हुए है</string>
     <string name="selinux_status_permissive">पर्मिसिव</string>
     <string name="reboot_download">डाउनलोड में रिबूट करें</string>
-    <string name="settings_umount_modules_default">डिफ़ॉल्ट रूप से मॉड्यूल अनमाउन्ट करें</string>
-    <string name="profile_umount_modules_summary">इस विकल्प को चालू करने से KernelSU को इस एप्लिकेशन के लिए मॉड्यूल द्वारा किसी भी मोडिफाइड फ़ाइल को रिस्टोर करें।</string>
     <string name="profile_namespace_individual">Individual</string>
     <string name="force_stop_app">जबर्दस्ती बंद करें</string>
     <string name="reboot_edl">EDL मोड में रिबूट करें</string>
     <string name="restart_app">फिर से चालू करें</string>
     <string name="profile_capabilities">क्षमताएं</string>
     <string name="profile_namespace_global">Global</string>
-    <string name="settings_umount_modules_default_summary">ऐप प्रोफाइल में \"अनमाउंट मॉड्यूल\" के लिए ग्लोबल डिफ़ॉल्ट वैल्यू। यदि चालू किया गया है, तो यह एप्लीकेशंस के लिऐ सिस्टम के सभी मॉड्यूल मोडिफिकेशन को हटा देगा जिनकी प्रोफ़ाइल सेट नहीं है।</string>
     <string name="selinux_status_enforcing">एनफोर्सिंग</string>
     <string name="profile_selinux_context">SELinux context</string>
     <string name="home_fingerprint">फिंगरप्रिंट</string>
@@ -67,8 +63,6 @@
     <string name="save_log">लॉग सहेजें</string>
     <string name="settings_sucompat">su बाइनरी को फिर से रूट करें</string>
     <string name="settings_sucompat_summary">ऐप प्रोफ़ाइल में सुपरयूज़र अनुमति दिए गए ऐप्स को /system/bin/su को निष्पादित करके सुपरयूज़र शेल प्राप्त करने की अनुमति देता है; केवल नई प्रक्रियाओं के लिए प्रभावी।</string>
-    <string name="settings_kernel_umount">कर्नेल अनमाउंट</string>
-    <string name="settings_kernel_umount_summary">KernelSU द्वारा नियंत्रित कर्नेल-स्तरीय अनमाउंट व्यवहार</string>
     <string name="profile_flags_desc_no_new_privs">इस रूट प्रोफाइल के संदर्भ में KernelSU के माध्यम से आगे विशेषाधिकार बढ़ाने से रोकता है।</string>
     <string name="install_force_backup">स्टॉक इमेज के रूप में बैकअप करें</string>
     <string name="install_force_backup_summary">कृपया सुनिश्चित करें कि आपने जो boot इमेज चुनी है वह स्टॉक इमेज है</string>

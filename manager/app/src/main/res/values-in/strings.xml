@@ -82,14 +82,10 @@
     <string name="profile_capabilities">Kemampuan</string>
     <string name="profile_flags">Atribut</string>
     <string name="profile_selinux_context">Konteks SELinux</string>
-    <string name="profile_umount_modules">Umount modul</string>
     <string name="failed_to_update_app_profile">Gagal memperbarui Profil Aplikasi untuk %s</string>
     <string name="uapi_mismatch">Versi uapi manajer (%1$d) dan versi uapi driver KernelSU (%2$d) tidak sesuai!</string>
     <string name="require_manager_version">Versi manajer KernelSU saat ini (%1$d) terlalu rendah agar KernelSU dapat berfungsi dengan benar. Harap perbarui manajer ke versi %2$d atau lebih tinggi!</string>
     <string name="require_kernel_version">Versi KernelSU saat ini %1$d terlalu rendah agar manajer berfungsi dengan benar. Harap perbarui ke versi %2$d atau lebih tinggi!</string>
-    <string name="settings_umount_modules_default">Umount modul secara bawaan</string>
-    <string name="settings_umount_modules_default_summary">Nilai bawaan global untuk \"Umount modul\" di Profil Aplikasi. Jika diaktifkan, fitur ini akan menghapus semua modifikasi modul pada sistem untuk aplikasi yang tidak memiliki profil yang ditetapkan.</string>
-    <string name="profile_umount_modules_summary">Mengaktifkan opsi ini akan memungkinkan KernelSU untuk memulihkan berkas apa pun yang telah dimodifikasi oleh modul untuk aplikasi ini</string>
     <string name="profile_selinux_domain">Domain</string>
     <string name="profile_selinux_rules">Aturan</string>
     <string name="recently_installed">Baru saja dipasang</string>
@@ -167,8 +163,6 @@
     <string name="log_saved">Log disimpan</string>
     <string name="settings_sucompat">Perintah klasik SU</string>
     <string name="settings_sucompat_summary">Izinkan akses Root melalui /system/bin/su, pada proses baru yang dibuat</string>
-    <string name="settings_kernel_umount">Umount kernel</string>
-    <string name="settings_kernel_umount_summary">Unmount modul dari kernel pada Profil Aplikasi</string>
     <string name="settings_selinux_hide">Sembunyikan modifikasi SELinux</string>
     <string name="settings_selinux_hide_summary">Mencegah aplikasi mendeteksi modifikasi SELinux</string>
     <string name="settings_selinux_hide_reboot_required">Mulai ulang untuk menerapkan</string>

@@ -27,13 +27,6 @@ data class SettingsUiState(
     val suCompatMode: Int = 0, // 0: enable default, 1: disable until reboot, 2: disable always
     val isSuEnabled: Boolean = false,
 
-    // Kernel Umount
-    val kernelUmountStatus: String = "",
-    val isKernelUmountEnabled: Boolean = false,
-
-    // WebView Zygote Umount
-    val webViewZygoteUmountStatus: String = "",
-    val isWebViewZygoteUmountEnabled: Boolean = false,
 
     // SELinux Hide
     val selinuxHideStatus: String = "",
@@ -43,8 +36,6 @@ data class SettingsUiState(
     val sulogStatus: String = "",
     val isSulogEnabled: Boolean = false,
 
-    // Umount Modules
-    val isDefaultUmountModules: Boolean = false,
 
     // ADB Root
     val adbRootStatus: String = "",
@@ -67,12 +58,9 @@ data class SettingsScreenActions(
     val onSetUiModeIndex: (Int) -> Unit,
     val onOpenProfileTemplate: () -> Unit,
     val onSetSuCompatMode: (Int) -> Unit,
-    val onSetKernelUmountEnabled: (Boolean) -> Unit,
-    val onSetWebViewZygoteUmountEnabled: (Boolean) -> Unit,
     val onSetSelinuxHideEnabled: (Boolean) -> Unit,
     val onSetSulogEnabled: (Boolean) -> Unit,
     val onSetAdbRootEnabled: (Boolean) -> Unit,
-    val onSetDefaultUmountModules: (Boolean) -> Unit,
     val onSetEnableWebDebugging: (Boolean) -> Unit,
     val onSetAutoJailbreak: (Boolean) -> Unit,
     val onSetUseSoftReboot: (Boolean) -> Unit,

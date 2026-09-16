@@ -30,13 +30,7 @@ interface SettingsRepository {
     fun setSuCompatModePref(mode: Int)
     fun getSuCompatModePref(): Int
 
-    suspend fun getKernelUmountStatus(): String
-    fun isKernelUmountEnabled(): Boolean
-    fun setKernelUmountEnabled(enabled: Boolean): Boolean
 
-    suspend fun getWebViewZygoteUmountStatus(): String
-    fun isWebViewZygoteUmountEnabled(): Boolean
-    fun setWebViewZygoteUmountEnabled(enabled: Boolean): Boolean
 
     suspend fun getSelinuxHideStatus(): String
     fun isSelinuxHideEnabled(): Boolean
@@ -50,8 +44,6 @@ interface SettingsRepository {
     suspend fun getAdbRootPersistValue(): Long?
     fun setAdbRootEnabled(enabled: Boolean): Boolean
 
-    fun isDefaultUmountModules(): Boolean
-    fun setDefaultUmountModules(enabled: Boolean): Boolean
 
     fun isLkmMode(): Boolean
 

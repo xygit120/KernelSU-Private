@@ -33,9 +33,6 @@
     <string name="profile_groups">Grupper</string>
     <string name="profile_capabilities">Evner</string>
     <string name="profile_selinux_context">SELinux-kontext</string>
-    <string name="profile_umount_modules">Afmonteret moduler</string>
-    <string name="settings_umount_modules_default">Afmontere moduler</string>
-    <string name="profile_umount_modules_summary">Hvis denne indstilling aktiveres, kan KernelSU gendanne alle ændrede filer af modulerne til denne app.</string>
     <string name="manager_update">Opdatering</string>
     <string name="new_version_available">Ny version %s er tilgængelig, klik for at opgradere!</string>
     <string name="launch_app">Start</string>
@@ -57,7 +54,6 @@
     <string name="profile_name">Profilnavn</string>
     <string name="profile_namespace_individual">Individuel</string>
     <string name="failed_to_update_app_profile">Opdatering af App Profil for %s fejlede</string>
-    <string name="settings_umount_modules_default_summary">Den globale standardværdi for \"Umount moduler\" i App Profile. Hvis aktiveret, fjernes alle modulændringer til systemet for apps, der ikke har en profil angivet.</string>
     <string name="profile_selinux_domain">Domæne</string>
     <string name="profile_selinux_rules">Regler</string>
     <string name="restart_app">Genstart</string>
@@ -120,8 +116,6 @@
     <string name="install_only_support_ko_file">Kun .ko-filer understøttes</string>
     <string name="settings_sucompat">Omdiriger su binary</string>
     <string name="settings_sucompat_summary">Tillader apps med Superuser-tilladelse i App Profile at få superuser shell ved at udføre /system/bin/su; gælder kun for nye processer.</string>
-    <string name="settings_kernel_umount">Kernel umount</string>
-    <string name="settings_kernel_umount_summary">Kernel-niveau umount adfærd kontrolleret af KernelSU</string>
     <string name="processing">Behandler…</string>
     <string name="refresh_pulling">Træk ned for at opdatere</string>
     <string name="refresh_release">Slip for at opdatere</string>

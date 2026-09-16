@@ -46,7 +46,6 @@
     <string name="profile_namespace_inherited">継承</string>
     <string name="profile_namespace_global">共通</string>
     <string name="profile_namespace_individual">分離</string>
-    <string name="profile_umount_modules">モジュールのアンマウント</string>
     <string name="profile_groups">グループ</string>
     <string name="profile_selinux_context">SELinux コンテキスト</string>
     <string name="failed_to_update_app_profile">%s のアプリのプロファイルの更新をできませでした</string>
@@ -59,9 +58,6 @@
     <string name="restart_app">再起動</string>
     <string name="failed_to_update_sepolicy">SELinux ルールの更新に失敗しました %s</string>
     <string name="profile_capabilities">ケーパビリティ</string>
-    <string name="profile_umount_modules_summary">このオプションを有効にすると、KernelSU はこのアプリのモジュールによって変更されたファイルを復元できるようになります。</string>
-    <string name="settings_umount_modules_default">デフォルトでモジュールをアンマウントする</string>
-    <string name="settings_umount_modules_default_summary">アプリプロファイルの「モジュールのアンマウント」の共通のデフォルト値です。 有効にすると、プロファイルセットを持たないアプリのシステムに対するすべてのモジュールの変更が削除されます。</string>
     <string name="require_kernel_version">現在の KernelSU バージョン %1$d はマネージャーが適切に機能するには低すぎます。 バージョン %2$d 以降にアップグレードしてください！</string>
     <string name="manager_changelog">変更履歴</string>
     <string name="app_profile_template_import_success">インポート成功</string>
@@ -121,8 +117,6 @@
     <string name="install_only_support_ko_file">.ko ファイルのみサポートされています</string>
     <string name="settings_sucompat">従来の SU コマンド</string>
     <string name="settings_sucompat_summary">新規プロセスで /system/bin/su 経由での root アクセスを許可します。</string>
-    <string name="settings_kernel_umount">モジュールのアンマウント (カーネルレベル)</string>
-    <string name="settings_kernel_umount_summary">アプリプロファイルに基づいて、カーネルからモジュールをアンマウントします。</string>
     <string name="processing">処理中…</string>
     <string name="refresh_pulling">下に引いて更新</string>
     <string name="refresh_release">リリースして更新</string>

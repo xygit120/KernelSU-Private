@@ -49,11 +49,7 @@
     <string name="profile_groups">Groepen</string>
     <string name="profile_capabilities">Mogelijkheden</string>
     <string name="profile_selinux_context">SELinux context</string>
-    <string name="profile_umount_modules">Ontkoppel modules</string>
     <string name="failed_to_update_app_profile">Mislukt om App Profiel te updaten voor %s</string>
-    <string name="settings_umount_modules_default">Ontkoppel standaard de modules</string>
-    <string name="settings_umount_modules_default_summary">De globale standaardwaarde voor \"Umount modules\" in App Profile. Als dit is ingeschakeld, worden alle modulewijzigingen in het systeem verwijderd voor apps waarvoor geen profiel is ingesteld.</string>
-    <string name="profile_umount_modules_summary">Met deze optie ingeschakeld zal KernelSU toelaten om alle gewijzigde bestanden door de modules voor deze app te herstellen.</string>
     <string name="profile_selinux_domain">Domein</string>
     <string name="profile_selinux_rules">Regels</string>
     <string name="manager_update">Update</string>
@@ -123,8 +119,6 @@
     <string name="install_only_support_ko_file">Alleen .ko bestanden worden ondersteund</string>
     <string name="settings_sucompat">SU binary omleiden</string>
     <string name="settings_sucompat_summary">Stelt apps met Superuser-toestemming in App Profiel in staat om een superuser-shell te verkrijgen door /system/bin/su uit te voeren; alleen effectief voor nieuwe processen.</string>
-    <string name="settings_kernel_umount">Modules ontkoppelen (op kernelniveau)</string>
-    <string name="settings_kernel_umount_summary">Kernel-niveau ontkoppelgedrag beheerd door KernelSU.</string>
     <string name="processing">Verwerken…</string>
     <string name="refresh_pulling">Trek omlaag om te vernieuwen</string>
     <string name="refresh_release">Vrijgeven om te vernieuwen</string>

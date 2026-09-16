@@ -476,18 +476,15 @@ private fun GroupItem(
 ) {
     val bg = colorScheme.primary
     val fg = colorScheme.onPrimary
-    val umountBg = colorScheme.tertiaryContainer
-    val umountFg = colorScheme.onTertiaryContainer
     val customBg = colorScheme.secondaryContainer
     val customFg = colorScheme.onSecondaryContainer
     val otherBg = colorScheme.tertiary
     val otherFg = colorScheme.onTertiary
 
     val userId = group.uid / 100000
-    val tags = remember(group.anyAllowSu, group.shouldUmount, group.anyCustom, userId) {
+    val tags = remember(group.anyAllowSu, group.anyCustom, userId) {
         buildList {
             if (group.anyAllowSu) add(StatusMeta("ROOT", bg, fg))
-            if (group.shouldUmount) add(StatusMeta("UMOUNT", umountBg, umountFg))
             if (group.anyCustom) add(StatusMeta("CUSTOM", customBg, customFg))
             if (userId != 0) add(StatusMeta("USER $userId", otherBg, otherFg))
         }

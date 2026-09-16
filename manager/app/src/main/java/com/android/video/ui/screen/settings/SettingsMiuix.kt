@@ -219,47 +219,6 @@ fun SettingPagerMiuix(
                                 onSelectedIndexChange = actions.onSetSuCompatMode
                             )
 
-                            val umountSummary = when (uiState.kernelUmountStatus) {
-                                "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
-                                "managed" -> stringResource(id = R.string.feature_status_managed_summary)
-                                else -> stringResource(id = R.string.settings_kernel_umount_summary)
-                            }
-                            SwitchPreference(
-                                title = stringResource(id = R.string.settings_kernel_umount),
-                                summary = umountSummary,
-                                startAction = {
-                                    Icon(
-                                        Icons.Rounded.RemoveCircle,
-                                        modifier = Modifier.padding(end = 6.dp),
-                                        contentDescription = stringResource(id = R.string.settings_kernel_umount),
-                                        tint = colorScheme.onBackground
-                                    )
-                                },
-                                enabled = uiState.kernelUmountStatus == "supported",
-                                checked = uiState.isKernelUmountEnabled,
-                                onCheckedChange = actions.onSetKernelUmountEnabled
-                            )
-
-                            val webViewUmountSummary = when (uiState.webViewZygoteUmountStatus) {
-                                "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
-                                "managed" -> stringResource(id = R.string.feature_status_managed_summary)
-                                else -> stringResource(id = R.string.settings_webview_zygote_umount_summary)
-                            }
-                            SwitchPreference(
-                                title = stringResource(id = R.string.settings_webview_zygote_umount),
-                                summary = webViewUmountSummary,
-                                startAction = {
-                                    Icon(
-                                        Icons.Rounded.Language,
-                                        modifier = Modifier.padding(end = 6.dp),
-                                        contentDescription = stringResource(id = R.string.settings_webview_zygote_umount),
-                                        tint = colorScheme.onBackground
-                                    )
-                                },
-                                enabled = uiState.webViewZygoteUmountStatus == "supported",
-                                checked = uiState.isWebViewZygoteUmountEnabled,
-                                onCheckedChange = actions.onSetWebViewZygoteUmountEnabled
-                            )
 
                             val selinuxHideSummary = when (uiState.selinuxHideStatus) {
                                 "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
@@ -345,20 +304,6 @@ fun SettingPagerMiuix(
                                 .padding(top = 12.dp)
                                 .fillMaxWidth(),
                         ) {
-                            SwitchPreference(
-                                title = stringResource(id = R.string.settings_umount_modules_default),
-                                summary = stringResource(id = R.string.settings_umount_modules_default_summary),
-                                startAction = {
-                                    Icon(
-                                        Icons.Rounded.FolderDelete,
-                                        modifier = Modifier.padding(end = 6.dp),
-                                        contentDescription = stringResource(id = R.string.settings_umount_modules_default),
-                                        tint = colorScheme.onBackground
-                                    )
-                                },
-                                checked = uiState.isDefaultUmountModules,
-                                onCheckedChange = actions.onSetDefaultUmountModules
-                            )
 
                             SwitchPreference(
                                 title = stringResource(id = R.string.enable_web_debugging),

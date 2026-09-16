@@ -11,7 +11,6 @@
 #include "manager/manager_observer.h"
 #include "manager/throne_tracker.h"
 
-bool ksu_module_mounted __read_mostly = false;
 bool ksu_boot_completed __read_mostly = false;
 
 void on_post_fs_data(void)
@@ -54,12 +53,6 @@ int nuke_ext4_sysfs(const char *mnt)
     ext4_unregister_sysfs(path.dentry->d_inode->i_sb);
     path_put(&path);
     return 0;
-}
-
-void on_module_mounted(void)
-{
-    pr_info("on_module_mounted!\n");
-    ksu_module_mounted = true;
 }
 
 void on_boot_completed(void)

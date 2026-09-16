@@ -171,7 +171,6 @@ Java_com_android_video_Natives_getAppProfile(JNIEnv *env, jobject, jstring pkg, 
     jfieldID flagsField = env->GetFieldID(cls, "flags", "J");
 
     auto nonRootUseDefaultField = env->GetFieldID(cls, "nonRootUseDefault", "Z");
-    auto umountModulesField = env->GetFieldID(cls, "umountModules", "Z");
 
     env->SetObjectField(obj, keyField, env->NewStringUTF(profile.key));
     env->SetIntField(obj, currentUidField, profile.curr_uid);
@@ -224,7 +223,6 @@ Java_com_android_video_Natives_getAppProfile(JNIEnv *env, jobject, jstring pkg, 
     } else {
         env->SetBooleanField(obj, nonRootUseDefaultField,
                 (jboolean) profile.nrp_config.use_default);
-        env->SetBooleanField(obj, umountModulesField, profile.nrp_config.profile.umount_modules);
     }
 
     return obj;
@@ -251,7 +249,6 @@ Java_com_android_video_Natives_setAppProfile(JNIEnv *env, jobject clazz, jobject
     jfieldID flagsField = env->GetFieldID(cls, "flags", "J");
 
     auto nonRootUseDefaultField = env->GetFieldID(cls, "nonRootUseDefault", "Z");
-    auto umountModulesField = env->GetFieldID(cls, "umountModules", "Z");
 
     auto key = env->GetObjectField(profile, keyField);
     if (!key) {
@@ -274,7 +271,6 @@ Java_com_android_video_Natives_setAppProfile(JNIEnv *env, jobject clazz, jobject
     auto capabilities = env->GetObjectField(profile, capabilitiesField);
     auto domain = env->GetObjectField(profile, domainField);
     auto allowSu = env->GetBooleanField(profile, allowSuField);
-    auto umountModules = env->GetBooleanField(profile, umountModulesField);
 
     app_profile p = {};
     p.version = KSU_APP_PROFILE_VER;
@@ -314,15 +310,9 @@ Java_com_android_video_Natives_setAppProfile(JNIEnv *env, jobject clazz, jobject
         p.rp_config.profile.flags = env->GetLongField(profile, flagsField);
     } else {
         p.nrp_config.use_default = env->GetBooleanField(profile, nonRootUseDefaultField);
-        p.nrp_config.profile.umount_modules = umountModules;
     }
 
     return set_app_profile(&p);
-}
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_com_android_video_Natives_uidShouldUmount(JNIEnv *env, jobject thiz, jint uid) {
-    return uid_should_umount(uid);
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -333,30 +323,6 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_android_video_Natives_setSuEnabled(JNIEnv *env, jobject thiz, jboolean enabled) {
     return set_su_enabled(enabled);
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_com_android_video_Natives_isKernelUmountEnabled(JNIEnv *env, jobject thiz) {
-    return is_kernel_umount_enabled();
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_com_android_video_Natives_setKernelUmountEnabled(JNIEnv *env, jobject thiz, jboolean enabled) {
-    return set_kernel_umount_enabled(enabled);
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_com_android_video_Natives_isWebViewZygoteUmountEnabled(JNIEnv *env, jobject thiz) {
-    return is_webview_zygote_umount_enabled();
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_com_android_video_Natives_setWebViewZygoteUmountEnabled(JNIEnv *env, jobject thiz, jboolean enabled) {
-    return set_webview_zygote_umount_enabled(enabled);
 }
 
 extern "C"

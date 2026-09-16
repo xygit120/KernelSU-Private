@@ -533,16 +533,13 @@ private fun GroupItem(
     val isInDarkTheme = isInDarkTheme()
     val bg = colorScheme.secondaryContainer.copy(alpha = 0.8f)
     val rootBg = colorScheme.tertiaryContainer.copy(alpha = 0.6f)
-    val unmountBg = if (isInDarkTheme) Color.White.copy(alpha = 0.4f) else Color.Black.copy(alpha = 0.3f)
     val fg = colorScheme.onSecondaryContainer
     val rootFg = colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
-    val unmountFg = if (isInDarkTheme) Color.Black.copy(alpha = 0.4f) else Color.White.copy(alpha = 0.8f)
 
     val userId = group.uid / 100000
-    val tags = remember(group.anyAllowSu, group.shouldUmount, group.anyCustom, userId) {
+    val tags = remember(group.anyAllowSu, group.anyCustom, userId) {
         buildList {
             if (group.anyAllowSu) add(StatusMeta("ROOT", rootBg, rootFg))
-            if (group.shouldUmount) add(StatusMeta("UMOUNT", unmountBg, unmountFg))
             if (group.anyCustom) add(StatusMeta("CUSTOM", bg, fg))
             if (userId != 0) add(StatusMeta("USER $userId", bg, fg))
         }

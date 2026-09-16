@@ -276,7 +276,6 @@ class SuperUserViewModel(
 
     private fun buildGroups(
         apps: List<AppInfo>,
-        umount: (Int) -> Boolean = { Natives.uidShouldUmount(it) },
     ): List<GroupedApps> {
         val collator = Collator.getInstance(Locale.getDefault())
         val comparator = compareBy<AppInfo> {
@@ -289,7 +288,6 @@ class SuperUserViewModel(
         return apps.groupBy { it.uid }.map { (uid, list) ->
             val sorted = list.sortedWith(comparator)
             val primary = pickPrimary(sorted)
-            val shouldUmount = umount(uid)
             val ownerName = if (sorted.size > 1) ownerNameForUid(uid, sorted) else null
 
             GroupedApps(
@@ -298,7 +296,6 @@ class SuperUserViewModel(
                 primary = primary,
                 anyAllowSu = sorted.any { it.allowSu },
                 anyCustom = sorted.any { it.hasCustomProfile },
-                shouldUmount = shouldUmount,
                 ownerName = ownerName
             )
         }
@@ -335,8 +332,7 @@ class SuperUserViewModel(
             repo.getAppList().onSuccess { (newApps, ids) ->
                 val (cachedGroups, grouped) = withContext(Dispatchers.IO) {
                     val cached = buildCachedGroups(newApps)
-                    val umountByUid = cached.associate { it.uid to it.shouldUmount }
-                    cached to buildGroups(filterApps(newApps)) { umountByUid[it] ?: Natives.uidShouldUmount(it) }
+                    cached to buildGroups(filterApps(newApps))
                 }
 
                 // Update cache for static method
@@ -370,16 +366,13 @@ class SuperUserViewModel(
 
                 val (cachedGroups, grouped) = withContext(Dispatchers.IO) {
                     val cached = buildCachedGroups(updatedApps)
-                    val umountByUid = cached.associate { it.uid to it.shouldUmount }
-                    val visible = buildGroups(filterApps(updatedApps)) {
-                        umountByUid[it] ?: Natives.uidShouldUmount(it)
-                    }
+                    val visible = buildGroups(filterApps(updatedApps))
                     val result = if (resort) {
                         visible
                     } else {
                         val byUid = visible.associateBy { it.uid }
                         _uiState.value.groupedApps.map { group ->
-                            byUid[group.uid] ?: group.copy(shouldUmount = Natives.uidShouldUmount(group.uid))
+                            byUid[group.uid] ?: group
                         }
                     }
                     cached to result

@@ -33,7 +33,6 @@ struct root_profile {
 };
 
 struct non_root_profile {
-    bool umount_modules;
 };
 
 struct app_profile {

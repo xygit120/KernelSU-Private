@@ -150,7 +150,6 @@ void __init ksu_syscall_hook_manager_init(void)
     }
 #endif
 
-    ksu_setuid_hook_init();
     ksu_sucompat_init();
 }
 
@@ -177,5 +176,4 @@ void __exit ksu_syscall_hook_manager_exit(void)
     ksu_syscall_hook_exit();
 
     ksu_sucompat_exit();
-    ksu_setuid_hook_exit();
 }

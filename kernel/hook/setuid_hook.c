@@ -19,7 +19,6 @@
 #include "infra/seccomp_cache.h"
 #include "supercall/supercall.h"
 #include "hook/tp_marker.h"
-#include "feature/kernel_umount.h"
 
 int ksu_handle_setresuid(uid_t old_uid, uid_t new_uid)
 {
@@ -49,19 +48,6 @@ int ksu_handle_setresuid(uid_t old_uid, uid_t new_uid)
         ksu_clear_task_tracepoint_flag_if_needed(current);
     }
 
-    // Handle kernel umount
-    ksu_handle_umount(old_uid, new_uid);
-
     return 0;
 }
 
-void __init ksu_setuid_hook_init(void)
-{
-    ksu_kernel_umount_init();
-}
-
-void __exit ksu_setuid_hook_exit(void)
-{
-    pr_info("ksu_core_exit\n");
-    ksu_kernel_umount_exit();
-}

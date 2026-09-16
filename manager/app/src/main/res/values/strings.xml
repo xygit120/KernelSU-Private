@@ -82,14 +82,10 @@
     <string name="profile_capabilities">Capabilities</string>
     <string name="profile_flags">Flags</string>
     <string name="profile_selinux_context">SELinux context</string>
-    <string name="profile_umount_modules">Umount modules</string>
     <string name="failed_to_update_app_profile">Failed to update App Profile for %s</string>
     <string name="uapi_mismatch">Manager uapi version (%1$d) and KernelSU driver uapi version (%2$d) mismatch.</string>
     <string name="require_manager_version">The current KernelSU manager version %1$d is too low for KernelSU to work properly. Please upgrade manager to version %2$d or higher!</string>
     <string name="require_kernel_version">The current KernelSU version %1$d is too low for the manager to work properly. Please upgrade to version %2$d or higher!</string>
-    <string name="settings_umount_modules_default">Umount modules by default</string>
-    <string name="settings_umount_modules_default_summary">The global default value for \"Umount modules\" in App Profile. If enabled, it will remove all module modifications to the system for apps that don\'t have a profile set.</string>
-    <string name="profile_umount_modules_summary">Enabling this option will allow KernelSU to restore any modified files by the modules for this app.</string>
     <string name="profile_selinux_domain">Domain</string>
     <string name="profile_selinux_rules">Rules</string>
     <string name="recently_installed">Recently installed</string>
@@ -167,10 +163,6 @@
     <string name="log_saved">Logs saved</string>
     <string name="settings_sucompat">Classic SU command</string>
     <string name="settings_sucompat_summary">Allow Root access via /system/bin/su, in new processes</string>
-    <string name="settings_kernel_umount">Kernel umount</string>
-    <string name="settings_kernel_umount_summary">Unmount modules from kernel in App Profile</string>
-    <string name="settings_webview_zygote_umount">Unmount for WebView</string>
-    <string name="settings_webview_zygote_umount_summary">Prevent information leaks from WebView process but may break modules. Reboot to apply</string>
     <string name="settings_selinux_hide">Hide SELinux modification</string>
     <string name="settings_selinux_hide_summary">Prevent applications from detecting SELinux modifications</string>
     <string name="settings_selinux_hide_reboot_required">Reboot to take effect</string>

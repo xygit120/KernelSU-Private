@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="profile_umount_modules_summary">Iespējojot šo opciju, KernelSU varēs atjaunot visus moduļos šīs lietojumprogrammas modificētos failus.</string>
     <string name="failed_to_update_sepolicy">Neizdevās atjaunināt SELinux noteikumus: %s</string>
     <string name="settings_profile_template_summary">Pārvaldiet vietējo un tiešsaistes lietotņu profila veidni</string>
     <string name="app_profile_template_id_invalid">Nederīgs veidnes id</string>
@@ -50,10 +49,7 @@
     <string name="profile_namespace_individual">Individuāls</string>
     <string name="profile_capabilities">Iespējas</string>
     <string name="profile_selinux_context">SELinux konteksts</string>
-    <string name="profile_umount_modules">Atvienot moduļus</string>
     <string name="failed_to_update_app_profile">Neizdevās atjaunināt lietotnes profilu %s</string>
-    <string name="settings_umount_modules_default">Pēc noklusējuma atvienot moduļus</string>
-    <string name="settings_umount_modules_default_summary">Globālā noklusējuma vērtība vienumam “Atvienot moduļus” lietotņu profilos. Ja tas ir iespējots, lietojumprogrammām, kurām nav iestatīts profils, tiks noņemtas visas sistēmas moduļu modifikācijas.</string>
     <string name="profile_selinux_domain">Domēns</string>
     <string name="profile_selinux_rules">Noteikumi</string>
     <string name="manager_update">Atjaunināt</string>
@@ -117,8 +113,6 @@
     <string name="confirm">Apstiprināt</string>
     <string name="settings_sucompat">Pārvirzīt su bināro failu</string>
     <string name="settings_sucompat_summary">Pārvirzīt /system/bin/su uz ksud lietotnēm, kurām piešķirta Superuser atļauja lietotnes profilā; efektīva tikai jauniem procesiem.</string>
-    <string name="settings_kernel_umount">Kodola atvienošana</string>
-    <string name="settings_kernel_umount_summary">Kodola līmeņa atvienošanas uzvedība, ko kontrolē KernelSU</string>
     <string name="profile_flags_desc_no_new_privs">Novērš turpmāku privilēģiju paaugstināšanu, izmantojot KernelSU, šī root profila kontekstā.</string>
     <string name="install_force_backup">Dublēt kā sākotnējo attēlu</string>
     <string name="install_force_backup_summary">Lūdzu, pārliecinieties, ka izvēlētais boot attēls ir sākotnējais attēls</string>

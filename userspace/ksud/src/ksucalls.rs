@@ -116,6 +116,18 @@ pub fn ensure_uapi_version_matched() -> anyhow::Result<()> {
     Ok(())
 }
 
+fn report_event(event: u32) {
+    let mut cmd = ksu_uapi::ksu_report_event_cmd { event };
+    let _ = ksuctl(ksu_uapi::KSU_IOCTL_REPORT_EVENT, &raw mut cmd);
+}
+
+pub fn report_post_fs_data() {
+    report_event(ksu_uapi::EVENT_POST_FS_DATA);
+}
+
+pub fn report_boot_complete() {
+    report_event(ksu_uapi::EVENT_BOOT_COMPLETED);
+}
 pub fn grant_root() -> std::io::Result<()> {
     ksuctl(ksu_uapi::KSU_IOCTL_GRANT_ROOT, std::ptr::null_mut::<u8>())?;
     Ok(())

@@ -21,7 +21,6 @@
     <string name="profile_groups">গ্রুপস</string>
     <string name="profile_selinux_context">এসইলিনাক্স কন্টেক্সট</string>
     <string name="failed_to_update_app_profile">%s এর জন্য অ্যাপ প্রফাইল আপডেট করা যায়নি</string>
-    <string name="settings_umount_modules_default">বাইডিফল্ট মোডিউল আনমাউন্ট</string>
     <string name="home">হোম</string>
     <string name="home_not_installed">ইন্সটল হয়নী</string>
     <string name="selinux_status_permissive">পারমিসিভ</string>
@@ -30,7 +29,6 @@
     <string name="profile_namespace_inherited">ইনহেরিটেড</string>
     <string name="profile_namespace_individual">ইন্ডিভিজুয়াল</string>
     <string name="profile_capabilities">ক্যাপাবিলিটিস</string>
-    <string name="profile_umount_modules">আনমাউন্ট মোডিউলস</string>
     <string name="reboot_recovery">রিকভারিতে বুট</string>
     <string name="reboot_bootloader">বুটলোডারে বুট</string>
     <string name="reboot_download">ডাউনলোড মডে বুট</string>
@@ -40,8 +38,6 @@
     <string name="save_log">লগ সংরক্ষণ করুন</string>
     <string name="settings_sucompat">su বাইনারি পুনর্নির্দেশ করুন</string>
     <string name="settings_sucompat_summary">অ্যাপ প্রোফাইলে সুপারইউজার অনুমতি সহ অ্যাপের জন্য /system/bin/su কে ksud-এ পুনর্নির্দেশ করুন; শুধুমাত্র নতুন প্রক্রিয়ার জন্য কার্যকর।</string>
-    <string name="settings_kernel_umount">কার্নেল আনমাউন্ট</string>
-    <string name="settings_kernel_umount_summary">KernelSU দ্বারা নিয়ন্ত্রিত কার্নেল-লেভেল আনমাউন্ট আচরণ</string>
     <string name="profile_flags_desc_no_new_privs">এই রুট প্রোফাইলের প্রেক্ষাপটে KernelSU-এর মাধ্যমে আরও বিশেষাধিকার বৃদ্ধি প্রতিরোধ করে।</string>
     <string name="install_force_backup">স্টক ইমেজ হিসেবে ব্যাকআপ করুন</string>
     <string name="install_force_backup_summary">অনুগ্রহ করে নিশ্চিত করুন যে আপনি যে boot ইমেজটি বেছে নিয়েছেন সেটি স্টক ইমেজ</string>

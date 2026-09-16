@@ -15,9 +15,7 @@
     <string name="home_learn_kernelsu_url">https://kernelsu.org/guide/what-is-kernelsu.html</string>
     <string name="profile_default">Vaikimisi</string>
     <string name="profile_namespace">Haagi nimeruum</string>
-    <string name="profile_umount_modules">Lahtihaagitud moodulid</string>
     <string name="failed_to_update_app_profile">Rakenduseprofiili uuendamine %s jaoks ebaõnnestus</string>
-    <string name="settings_umount_modules_default">Haagi moodulid vaikimisi lahti</string>
     <string name="failed_to_update_sepolicy">SELinux reeglite uuendamine ebaõnnestus: %s</string>
     <string name="app_profile_template_edit">Muuda malli</string>
     <string name="settings_profile_template">Rakenduseprofiili mall</string>
@@ -80,9 +78,7 @@ Liitu meie %2$si kanaliga</string>
     <string name="app_profile_template_save_failed">Malli salvestamine ebaõnnestus</string>
     <string name="app_profile_template_create">Loo mall</string>
     <string name="settings_profile_template_summary">Halda kohalikke ja võrgusolevaid rakenduseprofiili malle</string>
-    <string name="profile_umount_modules_summary">Selle valiku lubamine lubab KernelSU-l taastada selle rakenduse moodulite poolt mistahes muudetud faile.</string>
     <string name="app_profile_template_export_empty">Ei saa eksportida, kohalikku malli ei leitud!</string>
-    <string name="settings_umount_modules_default_summary">Globaalne vaikeväärtus \"Lahtihaagitud moodulitele\" rakenduseprofiilis. Lubamisel eemaldab see kõik moodulite süsteemimuudatused rakendustele, millel ei ole profiili määratud.</string>
     <string name="enable_web_debugging_summary">Saab kasutada WebUI silumiseks, palun luba ainult vajadusel.</string>
     <string name="grant_root_failed">Juurkasutaja andmine ebaõnnestus!</string>
     <string name="settings_check_update">Kontrolli uuendusi</string>
@@ -115,8 +111,6 @@ Liitu meie %2$si kanaliga</string>
     <string name="settings_restore_stock_image">Taasta vaikimisi tõmmis</string>
     <string name="settings_sucompat">Suuna su binaarfail ümber</string>
     <string name="settings_sucompat_summary">Võimaldab rakendustel, kellele on antud Superuser luba rakenduse profiilis, saada superuser shell, käivitades /system/bin/su; kehtib ainult uute protsesside puhul.</string>
-    <string name="settings_kernel_umount">Kernel umount</string>
-    <string name="settings_kernel_umount_summary">Kerneli tasemel lahtihaakimise käitumine, mida kontrollib KernelSU</string>
     <string name="profile_flags_desc_no_new_privs">Takistab õiguste edasist tõstmist KernelSU kaudu selle root-profiili kontekstis.</string>
     <string name="install_force_backup">Varunda kui tehasepilt</string>
     <string name="install_force_backup_summary">Veendu, et valitud boot-tõmmis on tehasepilt</string>

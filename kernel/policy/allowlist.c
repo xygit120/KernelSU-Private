@@ -19,7 +19,6 @@
 
 #include "klog.h" // IWYU pragma: keep
 #include "ksu.h"
-#include "feature/kernel_umount.h"
 #include "runtime/ksud_boot.h"
 #include "selinux/selinux.h"
 #include "policy/allowlist.h"
@@ -50,9 +49,6 @@ static void __init init_default_profiles()
            sizeof(default_root_profile.capabilities.effective));
     default_root_profile.namespaces = KSU_NS_INHERITED;
     strcpy(default_root_profile.selinux_domain, KSU_DEFAULT_SELINUX_DOMAIN);
-
-    // This means that we will umount modules by default!
-    default_non_root_profile.umount_modules = true;
 
     default_root_profile.flags = 0;
 }
@@ -232,8 +228,7 @@ int ksu_set_app_profile(struct app_profile *profile)
         pr_info("set root profile, key: %s, uid: %d, gid: %d, context: %s\n", profile->key, profile->curr_uid,
                 profile->rp_config.profile.gid, profile->rp_config.profile.selinux_domain);
     } else {
-        pr_info("set app profile, key: %s, uid: %d, umount modules: %d\n", profile->key, profile->curr_uid,
-                profile->nrp_config.profile.umount_modules);
+        pr_info("set app profile, key: %s, uid: %d\n", profile->key, profile->curr_uid);
     }
 
     hash_add_rcu(allow_list, &np->list, np->profile.curr_uid);
@@ -241,11 +236,6 @@ int ksu_set_app_profile(struct app_profile *profile)
 
 out:
     result = 0;
-
-    if (unlikely(profile->curr_uid == KSU_APP_PROFILE_PRESERVE_UID)) {
-        // set default non root profile
-        default_non_root_profile.umount_modules = profile->nrp_config.profile.umount_modules;
-    }
 
 out_unlock:
     mutex_unlock(&allowlist_mutex);
@@ -289,44 +279,6 @@ bool __ksu_is_allow_uid_for_current(uid_t uid)
         return is_ksu_domain();
     }
     return __ksu_is_allow_uid(uid);
-}
-
-bool ksu_uid_should_umount(uid_t uid)
-{
-    struct app_profile *profile;
-    bool res;
-    if (likely(ksu_is_manager_appid_valid()) && unlikely(ksu_get_manager_appid() == uid % PER_USER_RANGE)) {
-        // we should not umount on manager!
-        return false;
-    }
-    if (unlikely(uid == WEBVIEW_ZYGOTE_UID)) {
-        return ksu_webview_zygote_umount_enabled;
-    }
-#ifdef CONFIG_KSU_DISABLE_POLICY
-    return !__ksu_is_allow_uid(uid);
-#else
-    rcu_read_lock();
-    profile = ksu_get_app_profile(uid);
-    if (!profile) {
-        // no app profile found, it must be non root app
-        res = default_non_root_profile.umount_modules;
-    } else if (profile->allow_su) {
-        // if found and it is granted to su, we shouldn't umount for it
-        res = false;
-    } else {
-        // found an app profile
-        if (profile->nrp_config.use_default) {
-            res = default_non_root_profile.umount_modules;
-        } else {
-            res = profile->nrp_config.profile.umount_modules;
-        }
-    }
-    rcu_read_unlock();
-
-    if (profile)
-        ksu_put_app_profile(profile);
-    return res;
-#endif
 }
 
 void ksu_put_app_profile(struct app_profile *profile)

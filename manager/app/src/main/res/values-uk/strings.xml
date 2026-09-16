@@ -49,11 +49,7 @@
     <string name="profile_groups">Групи</string>
     <string name="profile_capabilities">Можливості</string>
     <string name="profile_selinux_context">Контекст SELinux</string>
-    <string name="profile_umount_modules">Розмонтування модулів</string>
     <string name="failed_to_update_app_profile">Не вдалося оновити профіль додатка для %s</string>
-    <string name="settings_umount_modules_default">Розмонтування модулів за замовчуванням</string>
-    <string name="settings_umount_modules_default_summary">Загальне значення за замовчуванням для \"Розмонтувати модулі\" у профілях додатків. Якщо ввімкнено, буде видалено всі модифікації модулів у системі для додатків, які не мають встановленого профілю.</string>
-    <string name="profile_umount_modules_summary">Увімкнення цієї опції дозволить KernelSU відновити будь-які змінені файли модулями для цієї програми.</string>
     <string name="profile_selinux_domain">Домен</string>
     <string name="profile_selinux_rules">Правила</string>
     <string name="manager_update">Оновити</string>
@@ -123,8 +119,6 @@
     <string name="install_only_support_ko_file">Підтримуються лише файли .ko</string>
     <string name="settings_sucompat">Перенаправлення бінарного файлу su</string>
     <string name="settings_sucompat_summary">Дозволяє програмам з правами Суперкористувача в профілі програми отримати оболонку суперкористувача шляхом виконання /system/bin/su; діє тільки для нових процесів.</string>
-    <string name="settings_kernel_umount">Розмонтування ядра</string>
-    <string name="settings_kernel_umount_summary">Поведінка розмонтування на рівні ядра, контрольована KernelSU</string>
     <string name="processing">Обробка…</string>
     <string name="refresh_pulling">Потягніть униз, щоб оновити</string>
     <string name="refresh_release">Відпустіть для оновлення</string>

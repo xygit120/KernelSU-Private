@@ -29,8 +29,6 @@ Csatlakozzon a %2$s csatornánkhoz</string>
     <string name="profile_groups">Csoportok</string>
     <string name="profile_capabilities">Jogosultságok</string>
     <string name="profile_selinux_context">SELinux kontextus</string>
-    <string name="settings_umount_modules_default">Modulok leválasztása alapértelmezetten</string>
-    <string name="profile_umount_modules_summary">Ha engedélyezi ezt az opciót, a KernelSU visszaállíthatja az alkalmazás moduljai által módosított fájlokat.</string>
     <string name="profile_selinux_domain">Tartomány</string>
     <string name="profile_selinux_rules">Szabályok</string>
     <string name="manager_update">Frissítés</string>
@@ -57,9 +55,7 @@ Csatlakozzon a %2$s csatornánkhoz</string>
     <string name="reboot_to_apply">Indítsa újra a készüléket a változások érvényesítéséhez</string>
     <string name="home_support_content">A KernelSU ingyenes, nyílt forráskódú és mindig is az lesz. Ön azonban adományozással megmutathatja, hogy törődik a projekttel.</string>
     <string name="profile_namespace_global">Globális</string>
-    <string name="profile_umount_modules">Modulok leválasztása</string>
     <string name="failed_to_update_app_profile">Nem sikerült frissíteni az App Profilt ehhez: %s</string>
-    <string name="settings_umount_modules_default_summary">A \"Modulok leválasztása\" globális alapértelmezett értéke az App Profile-ban. Ha engedélyezve van, eltávolít minden modulmódosítást a rendszerből azon alkalmazások esetében, amelyeknek nincs profilja beállítva.</string>
     <string name="new_version_available">Elérhető az új, %s verzió, kattintson a frissítéshez.</string>
     <string name="failed_to_update_sepolicy">Nem sikerült frissíteni az SELinux szabályokat a következőhöz: %s</string>
     <string name="require_kernel_version">A jelenlegi KernelSU verzió %1$d túlságosan elavult a megfelelő működéshez. Kérjük frissítsen a %2$d verzióra vagy újabbra!</string>
@@ -117,8 +113,6 @@ Csatlakozzon a %2$s csatornánkhoz</string>
     <string name="log_saved">Mentett naplók</string>
     <string name="settings_sucompat">su bináris átirányítása</string>
     <string name="settings_sucompat_summary">Lehetővé teszi az App Profile-ban Superuser engedéllyel rendelkező alkalmazások számára, hogy superuser shell-t kapjanak a /system/bin/su végrehajtásával; csak új folyamatoknál hatékony.</string>
-    <string name="settings_kernel_umount">Kernel leválasztása</string>
-    <string name="settings_kernel_umount_summary">KernelSU által vezérelt kernel szintű leválasztási viselkedés</string>
     <string name="profile_flags_desc_no_new_privs">Megakadályozza a jogosultságok további kiterjesztését a KernelSU-n keresztül ezen root profil kontextusán belül.</string>
     <string name="install_force_backup">Biztonsági mentés gyári képként</string>
     <string name="install_force_backup_summary">Kérjük, győződj meg róla, hogy a kiválasztott boot lemezkép a gyári lemezkép</string>

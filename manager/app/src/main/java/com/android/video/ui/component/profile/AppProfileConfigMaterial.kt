@@ -35,29 +35,5 @@ fun AppProfileConfigMaterial(
                 }
             )
         }
-
-        SegmentedColumn(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            content = listOf {
-                SegmentedSwitchItem(
-                    title = stringResource(R.string.profile_umount_modules),
-                    summary = stringResource(R.string.profile_umount_modules_summary),
-                    checked = if (enabled) {
-                        profile.umountModules
-                    } else {
-                        Natives.isDefaultUmountModules()
-                    },
-                    enabled = enabled,
-                    onCheckedChange = {
-                        onProfileChange(
-                            profile.copy(
-                                umountModules = it,
-                                nonRootUseDefault = false
-                            )
-                        )
-                    }
-                )
-            }
-        )
     }
 }

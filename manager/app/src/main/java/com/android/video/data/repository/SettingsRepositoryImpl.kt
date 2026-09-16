@@ -151,18 +151,11 @@ class SettingsRepositoryImpl : SettingsRepository {
 
     override fun getSuCompatModePref(): Int = prefs.getInt("su_compat_mode", 0)
 
-    override suspend fun getKernelUmountStatus(): String = getFeatureStatus("kernel_umount")
 
-    override fun isKernelUmountEnabled(): Boolean = Natives.isKernelUmountEnabled()
 
-    override fun setKernelUmountEnabled(enabled: Boolean): Boolean = Natives.setKernelUmountEnabled(enabled)
 
-    override suspend fun getWebViewZygoteUmountStatus(): String = getFeatureStatus("webview_zygote_umount")
 
-    override fun isWebViewZygoteUmountEnabled(): Boolean = Natives.isWebViewZygoteUmountEnabled()
 
-    override fun setWebViewZygoteUmountEnabled(enabled: Boolean): Boolean =
-        Natives.setWebViewZygoteUmountEnabled(enabled)
 
     override suspend fun getSelinuxHideStatus(): String = getFeatureStatus("selinux_hide")
 
@@ -188,9 +181,7 @@ class SettingsRepositoryImpl : SettingsRepository {
             false
         }
 
-    override fun isDefaultUmountModules(): Boolean = Natives.isDefaultUmountModules()
 
-    override fun setDefaultUmountModules(enabled: Boolean): Boolean = Natives.setDefaultUmountModules(enabled)
 
     override fun isLkmMode(): Boolean = Natives.isLkmMode
 

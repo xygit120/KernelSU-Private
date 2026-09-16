@@ -49,12 +49,8 @@
     <string name="profile_groups">Групи</string>
     <string name="profile_capabilities">Възможности</string>
     <string name="profile_selinux_context">SELinux контекст</string>
-    <string name="profile_umount_modules">Разкачи модули по подразбиране</string>
     <string name="failed_to_update_app_profile">Неуспешно актуализиране на App Profile за %s</string>
     <string name="require_kernel_version">Текущата версия %1$d на KernelSU е твърде ниска, за да работи правилно мениджърът. Моля, актуализирайте към версия %2$d или по-висока!</string>
-    <string name="settings_umount_modules_default">Разкачи модули</string>
-    <string name="settings_umount_modules_default_summary">Глобалната стойност по подразбиране за „Разкачи модули“ в профила на приложението. Ако е активирана, ще премахне всички модификации на модулите в системата за приложения, които нямат зададен профил.</string>
-    <string name="profile_umount_modules_summary">Активирането на тази опция ще позволи на KernelSU да възстанови всички модифицирани файлове от модулите за това приложение.</string>
     <string name="profile_selinux_domain">Домейн</string>
     <string name="profile_selinux_rules">Правила</string>
     <string name="manager_update">Актуализиране</string>
@@ -124,8 +120,6 @@
     <string name="feature_status_managed_summary">Тази функция е управлявана от модул.</string>
     <string name="settings_sucompat">Пренасочване на su бинарния файл</string>
     <string name="settings_sucompat_summary">Позволяет приложениям с предоставени права на Superuser в профила на приложението да получат superuser shell чрез изпълнение на /system/bin/su; в сила само за нови процеси.</string>
-    <string name="settings_kernel_umount">Kernel umount</string>
-    <string name="settings_kernel_umount_summary">Поведение за umount на ниво ядро, контролирано от KernelSU</string>
     <string name="processing">Обработва се…</string>
     <string name="refresh_pulling">Опънете надолу за да обновите</string>
     <string name="refresh_release">Пуснете за да обновите</string>

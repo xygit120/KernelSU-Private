@@ -8,6 +8,26 @@ use std::process::Command;
 
 use crate::{ksucalls, utils};
 
+pub fn on_post_data_fs() -> Result<()> {
+    if let Err(e) = ksucalls::ensure_uapi_version_matched() {
+        error!("{e:#}, skip on_post_fs_data");
+        return Ok(());
+    }
+
+    ksucalls::report_post_fs_data();
+    info!("on_post_fs_data triggered!");
+    Ok(())
+}
+
+pub fn on_boot_completed() {
+    if let Err(e) = ksucalls::ensure_uapi_version_matched() {
+        error!("{e:#}, skip on_boot_completed");
+        return;
+    }
+
+    ksucalls::report_boot_complete();
+    info!("on_boot_completed triggered!");
+}
 const fn resetprop() -> ResetProp {
     ResetProp {
         skip_svc: true,

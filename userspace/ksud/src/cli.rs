@@ -46,6 +46,12 @@ enum Commands {
         package_name: String,
     },
 
+    /// Trigger `post-fs-data` event
+    PostFsData,
+
+    /// Trigger `boot-complete` event
+    BootCompleted,
+
     /// Emulate system reboot
     SoftReboot,
 
@@ -299,7 +305,7 @@ enum Profile {
 enum Feature {
     /// Get feature value and support status
     Get {
-        /// Feature ID or name (su_compat, kernel_umount, sulog, adb_root, selinux_hide, webview_zygote_umount)
+        /// Feature ID or name (su_compat, sulog, adb_root, selinux_hide)
         id: String,
         /// Read from config file
         #[arg(long, default_value_t = false)]
@@ -319,7 +325,7 @@ enum Feature {
 
     /// Check feature status (supported/unsupported/managed)
     Check {
-        /// Feature ID or name (su_compat, kernel_umount, sulog, adb_root, selinux_hide, webview_zygote_umount)
+        /// Feature ID or name (su_compat, sulog, adb_root, selinux_hide)
         id: String,
     },
 
@@ -363,6 +369,12 @@ pub fn run() -> Result<()> {
     log::info!("command: {:?}", cli.command);
 
     let result = match cli.command {
+        Commands::PostFsData => init_event::on_post_data_fs(),
+        Commands::BootCompleted => {
+            init_event::on_boot_completed();
+            Ok(())
+        }
+
         Commands::SoftReboot => init_event::soft_reboot(),
 
         Commands::Insmod { module, params } => debug::insmod(&module, &params),

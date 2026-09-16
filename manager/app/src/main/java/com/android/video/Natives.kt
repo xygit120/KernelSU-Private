@@ -51,7 +51,6 @@ object Natives {
     val isPrBuild: Boolean
         external get
 
-    external fun uidShouldUmount(uid: Int): Boolean
 
     /**
      * Get the profile of the given package.
@@ -70,17 +69,6 @@ object Natives {
     external fun isSuEnabled(): Boolean
     external fun setSuEnabled(enabled: Boolean): Boolean
 
-    /**
-     * Kernel module umount can be disabled temporarily.
-     *  0: disabled
-     *  1: enabled
-     *  negative : error
-     */
-    external fun isKernelUmountEnabled(): Boolean
-    external fun setKernelUmountEnabled(enabled: Boolean): Boolean
-
-    external fun isWebViewZygoteUmountEnabled(): Boolean
-    external fun setWebViewZygoteUmountEnabled(enabled: Boolean): Boolean
 
     /**
      * SELinux hide can be disabled temporarily.
@@ -98,25 +86,6 @@ object Natives {
 
     external fun getSuperuserCount(): Int
 
-    private const val NON_ROOT_DEFAULT_PROFILE_KEY = "$"
-    private const val NOBODY_UID = 9999
-
-    fun setDefaultUmountModules(umountModules: Boolean): Boolean {
-        Profile(
-            NON_ROOT_DEFAULT_PROFILE_KEY,
-            NOBODY_UID,
-            false,
-            umountModules = umountModules
-        ).let {
-            return setAppProfile(it)
-        }
-    }
-
-    fun isDefaultUmountModules(): Boolean {
-        getAppProfile(NON_ROOT_DEFAULT_PROFILE_KEY, NOBODY_UID).let {
-            return it.umountModules
-        }
-    }
 
     val kernelUAPIVersion: Int
         external get
@@ -157,7 +126,6 @@ object Natives {
         val namespace: Int = Namespace.INHERITED.ordinal,
 
         val nonRootUseDefault: Boolean = true,
-        val umountModules: Boolean = true,
         var rules: String = "", // this field is save in ksud!!
 
         val flags: Long = FLAG_KSU_NO_NEW_PRIVS,

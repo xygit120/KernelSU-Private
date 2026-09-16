@@ -49,13 +49,9 @@
     <string name="profile_groups">مجموعات</string>
     <string name="profile_custom">مُخصّص</string>
     <string name="profile_namespace">تركيب مساحة الاسم</string>
-    <string name="profile_umount_modules">الغاء تحميل الإضافات</string>
     <string name="failed_to_update_app_profile">فشل تحديث ملف تعريف التطبيق لـ %s</string>
     <string name="profile_selinux_context">سياق SELinux</string>
     <string name="force_stop_app">ايقاف إجباري</string>
-    <string name="settings_umount_modules_default">الغاء تحميل الإضافات بشكل افتراضي</string>
-    <string name="settings_umount_modules_default_summary">القيمة الافتراضية العامة لـ\"إلغاء تحميل الإضافات\" في ملفات تعريف التطبيقات. إذا تم تمكينه، إزالة جميع تعديلات الإضافات على النظام للتطبيقات التي لا تحتوي على مجموعة ملف تعريف.</string>
-    <string name="profile_umount_modules_summary">سيسمح تمكين هذا الخيار لـKernelSU باستعادة أي ملفات معدلة بواسطة الإضافات لهذا التطبيق.</string>
     <string name="profile_selinux_domain">المجال</string>
     <string name="profile_selinux_rules">القواعد</string>
     <string name="restart_app">إعادة تشغيل التطبيق</string>
@@ -120,8 +116,6 @@
     <string name="su_not_allowed">من الغير ممكن اعطاء صلاحيات (المسخدم الخارق) لـ %s</string>
     <string name="settings_sucompat">إعادة توجيه ثنائي su</string>
     <string name="settings_sucompat_summary">يسمح للتطبيقات التي تم منحها صلاحيات Superuser في ملف تعريف التطبيق بالحصول على shell superuser من خلال تنفيذ /system/bin/su؛ فعال فقط للعمليات الجديدة.</string>
-    <string name="settings_kernel_umount">إلغاء تحميل النواة</string>
-    <string name="settings_kernel_umount_summary">سلوك إلغاء تحميل مستوى النواة الذي يسيطر عليه KernelSU</string>
     <string name="profile_flags_desc_no_new_privs">يمنع المزيد من تصعيد الصلاحيات عبر KernelSU من داخل سياق ملف تعريف الروت هذا.</string>
     <string name="install_force_backup">نسخ احتياطي كصورة أصلية</string>
     <string name="install_force_backup_summary">يرجى التأكد من أن صورة boot التي اخترتها هي الصورة الأصلية</string>

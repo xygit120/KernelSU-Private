@@ -32,9 +32,6 @@
     <string name="profile_groups">Grupės</string>
     <string name="profile_capabilities">Galimybės</string>
     <string name="profile_selinux_context">SELinux kontekstas</string>
-    <string name="profile_umount_modules">Atjungti modulius</string>
-    <string name="settings_umount_modules_default">Atjungti modulius pagal numatytuosius parametrus</string>
-    <string name="profile_umount_modules_summary">Įjungus šią parinktį, KernelSU galės atkurti visus modulių modifikuotus failus šiai programai.</string>
     <string name="profile_selinux_domain">Domenas</string>
     <string name="profile_selinux_rules">Taisyklės</string>
     <string name="manager_update">Atnaujinti</string>
@@ -60,14 +57,11 @@
     <string name="home_support_title">Paremkite mus</string>
     <string name="home_support_content">KernelSU yra ir visada bus nemokamas ir atvirojo kodo. Tačiau galite parodyti, kad jums rūpi, paaukodami mums.</string>
     <string name="failed_to_update_app_profile">Nepavyko atnaujinti programos profilio %s</string>
-    <string name="settings_umount_modules_default_summary">Visuotinė numatytoji „Modulių atjungimo“ reikšmė programų profiliuose. Jei įjungta, ji pašalins visus sistemos modulio pakeitimus programoms, kurios neturi profilio.</string>
     <string name="manager_changelog">Keitimų žurnalas</string>
     <string name="require_kernel_version">Ši KernelSU versija %1$d yra per žema, kad šis vadybininkas galėtų tinkamai funkcionuoti. Prašome atsinaujinti į versiją %2$d ar aukščiau!</string>
     <string name="save_log">Saglabāt Žurnālus</string>
     <string name="settings_sucompat">Nukreipti su dvejetainį failą</string>
     <string name="settings_sucompat_summary">Nukreipti /system/bin/su į ksud programoms, kurioms suteiktas Superuser leidimas programos profilyje; veiksminga tik naujiems procesams.</string>
-    <string name="settings_kernel_umount">Branduolio atjungimas</string>
-    <string name="settings_kernel_umount_summary">Branduolio lygio atjungimo elgsena, valdoma KernelSU</string>
     <string name="profile_flags_desc_no_new_privs">Neleidžia toliau didinti privilegijų per KernelSU šio root profilio kontekste.</string>
     <string name="install_force_backup">Kurti atsarginę kopiją kaip gamyklinį atvaizdą</string>
     <string name="install_force_backup_summary">Įsitikinkite, kad pasirinktas boot atvaizdas yra gamyklinis atvaizdas</string>

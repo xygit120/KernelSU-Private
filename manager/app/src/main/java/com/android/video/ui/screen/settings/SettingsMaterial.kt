@@ -188,36 +188,6 @@ fun SettingPagerMaterial(
                             )
                         },
                         {
-                            val umountSummary = when (uiState.kernelUmountStatus) {
-                                "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
-                                "managed" -> stringResource(id = R.string.feature_status_managed_summary)
-                                else -> stringResource(id = R.string.settings_kernel_umount_summary)
-                            }
-                            SegmentedSwitchItem(
-                                icon = Icons.Filled.RemoveCircle,
-                                title = stringResource(id = R.string.settings_kernel_umount),
-                                summary = umountSummary,
-                                enabled = uiState.kernelUmountStatus == "supported",
-                                checked = uiState.isKernelUmountEnabled,
-                                onCheckedChange = actions.onSetKernelUmountEnabled
-                            )
-                        },
-                        {
-                            val webViewUmountSummary = when (uiState.webViewZygoteUmountStatus) {
-                                "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
-                                "managed" -> stringResource(id = R.string.feature_status_managed_summary)
-                                else -> stringResource(id = R.string.settings_webview_zygote_umount_summary)
-                            }
-                            SegmentedSwitchItem(
-                                icon = Icons.Filled.Language,
-                                title = stringResource(id = R.string.settings_webview_zygote_umount),
-                                summary = webViewUmountSummary,
-                                enabled = uiState.webViewZygoteUmountStatus == "supported",
-                                checked = uiState.isWebViewZygoteUmountEnabled,
-                                onCheckedChange = actions.onSetWebViewZygoteUmountEnabled
-                            )
-                        },
-                        {
                             val selinuxHideSummary = when (uiState.selinuxHideStatus) {
                                 "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
                                 "managed" -> stringResource(id = R.string.feature_status_managed_summary)
@@ -278,15 +248,6 @@ fun SettingPagerMaterial(
                 SegmentedColumn(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 13.dp),
                     content = listOf(
-                        {
-                            SegmentedSwitchItem(
-                                icon = Icons.Filled.FolderDelete,
-                                title = stringResource(id = R.string.settings_umount_modules_default),
-                                summary = stringResource(id = R.string.settings_umount_modules_default_summary),
-                                checked = uiState.isDefaultUmountModules,
-                                onCheckedChange = actions.onSetDefaultUmountModules
-                            )
-                        },
                         {
                             SegmentedSwitchItem(
                                 icon = Icons.Filled.DeveloperMode,

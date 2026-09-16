@@ -143,13 +143,6 @@ bool is_pr_build() {
     return false;
 }
 
-bool uid_should_umount(int uid) {
-    struct ksu_uid_should_umount_cmd cmd = {};
-    cmd.uid = uid;
-    ksuctl(KSU_IOCTL_UID_SHOULD_UMOUNT, &cmd);
-    return cmd.should_umount;
-}
-
 bool set_app_profile(const app_profile *profile) {
     struct ksu_set_app_profile_cmd cmd = {};
     cmd.profile = *profile;
@@ -198,38 +191,6 @@ static inline bool set_feature(uint32_t feature_id, uint64_t value) {
     cmd.feature_id = feature_id;
     cmd.value = value;
     return ksuctl(KSU_IOCTL_SET_FEATURE, &cmd) == 0;
-}
-
-bool set_kernel_umount_enabled(bool enabled) {
-    return set_feature(KSU_FEATURE_KERNEL_UMOUNT, enabled ? 1 : 0);
-}
-
-bool is_kernel_umount_enabled() {
-    uint64_t value = 0;
-    bool supported = false;
-    if (!get_feature(KSU_FEATURE_KERNEL_UMOUNT, &value, &supported)) {
-        return false;
-    }
-    if (!supported) {
-        return false;
-    }
-    return value != 0;
-}
-
-bool set_webview_zygote_umount_enabled(bool enabled) {
-    return set_feature(KSU_FEATURE_WEBVIEW_ZYGOTE_UMOUNT, enabled ? 1 : 0);
-}
-
-bool is_webview_zygote_umount_enabled() {
-    uint64_t value = 0;
-    bool supported = false;
-    if (!get_feature(KSU_FEATURE_WEBVIEW_ZYGOTE_UMOUNT, &value, &supported)) {
-        return false;
-    }
-    if (!supported) {
-        return false;
-    }
-    return value != 0;
 }
 
 int set_selinux_hide_enabled(bool enabled) {

@@ -32,10 +32,8 @@
     <string name="profile_groups">Mga Grupo</string>
     <string name="profile_capabilities">Mga Kakayanan</string>
     <string name="profile_selinux_context">Konteksto ng SELinux</string>
-    <string name="profile_umount_modules">I-unmount ang mga module</string>
     <string name="failed_to_update_app_profile">Nabigong i-update ang App Profile para sa %s</string>
     <string name="require_kernel_version">Ang kasalukuyang bersyon ng KernelSU %1$d ay masyadong mababa para gumana nang maayos ang manager. Mangyaring mag-upgrade sa bersyon %2$d o mas mataas!</string>
-    <string name="profile_umount_modules_summary">Ang pag-enable sa opsyong ito ay magbibigay-daan sa KernelSU na ibalik ang anumang binagong file ng mga module para sa app na ito.</string>
     <string name="profile_selinux_rules">Mga Tuntunin</string>
     <string name="new_version_available">Bagong bersyon: Available ang %s, i-click para mag-upgrade.</string>
     <string name="launch_app">Ilunsad</string>
@@ -49,7 +47,6 @@
     <string name="uninstall">I-uninstall</string>
     <string name="profile_name">Pangalan ng profile</string>
     <string name="profile_namespace_inherited">Minana</string>
-    <string name="settings_umount_modules_default_summary">Ang pangkalahatang default na halaga para sa \"Umount modules\" sa Mga Profile ng App. Kung pinagana, aalisin nito ang lahat ng mga pagbabago sa modyul sa system para sa mga aplikasyon na walang hanay ng Profile.</string>
     <string name="save_log">I-save ang mga Log</string>
     <string name="home_kernel">Bersyon ng kernel</string>
     <string name="home_fingerprint">Fingerprint</string>
@@ -61,7 +58,6 @@
     <string name="profile_template">Template</string>
     <string name="profile_custom">Pasadya</string>
     <string name="profile_namespace_global">Global</string>
-    <string name="settings_umount_modules_default">I-unmount ang mga module bilang default</string>
     <string name="profile_selinux_domain">Domain</string>
     <string name="manager_update">I-update</string>
     <string name="su_not_allowed">Hindi mabigay ang Superuser access sa %s</string>

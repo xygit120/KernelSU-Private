@@ -7,9 +7,6 @@
     <string name="profile_name">Tên hồ sơ</string>
     <string name="profile_groups">Nhóm</string>
     <string name="failed_to_update_app_profile">Cập nhật Hồ sơ ứng dụng cho %s thất bại!</string>
-    <string name="settings_umount_modules_default">Umount modules</string>
-    <string name="settings_umount_modules_default_summary">Giá trị mặc định chung cho \"Umount modules\" trong Hồ sơ ứng dụng. Nếu được bật, mọi thay đổi hệ thống do các module gây ra sẽ bị gỡ bỏ khỏi hệ thống và các ứng dụng chưa thiết lập hồ sơ.</string>
-    <string name="profile_umount_modules_summary">Bật tùy chọn này sẽ cho phép KernelSU khôi phục mọi file đã được các module sửa đổi trong ứng dụng này.</string>
     <string name="manager_update">Cập nhật</string>
     <string name="new_version_available">Phiên bản mới %s đã có sẵn, nhấn để cập nhật!</string>
     <string name="home_learn_kernelsu">Tìm hiểu về KernelSU</string>
@@ -70,7 +67,6 @@
     <string name="profile_namespace_global">Toàn cục</string>
     <string name="profile_namespace_individual">Riêng biệt</string>
     <string name="profile_selinux_context">Ngữ cảnh SELinux</string>
-    <string name="profile_umount_modules">Umount modules</string>
     <string name="uapi_mismatch">Phiên bản uapi của Trình quản lý (%1$d) và phiên bản uapi của driver KernelSU (%2$d) không khớp!</string>
     <string name="require_manager_version">Phiên bản Trình quản lý hiện tại %1$d quá thấp để KernelSU hoạt động bình thường. Vui lòng cập nhật Trình quản lý lên phiên bản %2$d hoặc cao hơn!</string>
     <string name="require_kernel_version">Phiên bản KernelSU hiện tại %1$d quá thấp để Trình quản lý hoạt động bình thường. Vui lòng cập nhật lên phiên bản %2$d hoặc cao hơn!</string>
@@ -133,8 +129,6 @@
     <string name="install_only_support_ko_file">Chỉ hỗ trợ các file .ko</string>
     <string name="settings_sucompat">Lệnh SU cổ điển</string>
     <string name="settings_sucompat_summary">Cho phép truy cập Root thông qua /system/bin/su, trong các tiến trình mới.</string>
-    <string name="settings_kernel_umount">Kernel umount</string>
-    <string name="settings_kernel_umount_summary">Umount modules khỏi Kernel trong Hồ sơ ứng dụng.</string>
     <string name="settings_selinux_hide">Ẩn sửa đổi SELinux</string>
     <string name="settings_selinux_hide_summary">Ngăn chặn các ứng dụng phát hiện các thay đổi của SELinux.</string>
     <string name="settings_selinux_hide_reboot_required">Khởi động lại để có hiệu lực!</string>

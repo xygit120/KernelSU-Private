@@ -12,7 +12,6 @@
 #include "klog.h" // IWYU pragma: keep
 #include "ksu.h"
 #include "runtime/ksud_boot.h"
-#include "feature/kernel_umount.h"
 #include "manager/manager_identity.h"
 #include "selinux/selinux.h"
 #include "infra/file_wrapper.h"
@@ -125,11 +124,6 @@ static int do_report_event(void __user *arg)
                 on_boot_completed();
             }
         }
-        break;
-    }
-    case EVENT_MODULE_MOUNTED: {
-        pr_info("module mounted!\n");
-        on_module_mounted();
         break;
     }
     default:
@@ -282,24 +276,6 @@ static int do_uid_granted_root(void __user *arg)
 
     if (copy_to_user(arg, &cmd, sizeof(cmd))) {
         pr_err("uid_granted_root: copy_to_user failed\n");
-        return -EFAULT;
-    }
-
-    return 0;
-}
-
-static int do_uid_should_umount(void __user *arg)
-{
-    struct ksu_uid_should_umount_cmd cmd;
-
-    if (copy_from_user(&cmd, arg, sizeof(cmd))) {
-        return -EFAULT;
-    }
-
-    cmd.should_umount = ksu_uid_should_umount(cmd.uid);
-
-    if (copy_to_user(arg, &cmd, sizeof(cmd))) {
-        pr_err("uid_should_umount: copy_to_user failed\n");
         return -EFAULT;
     }
 
@@ -530,108 +506,6 @@ static int do_nuke_ext4_sysfs(void __user *arg)
 struct list_head mount_list = LIST_HEAD_INIT(mount_list);
 DECLARE_RWSEM(mount_list_lock);
 
-static int add_try_umount(void __user *arg)
-{
-    struct mount_entry *new_entry, *entry, *tmp;
-    struct ksu_add_try_umount_cmd cmd;
-    char buf[256] = { 0 };
-
-    if (copy_from_user(&cmd, arg, sizeof cmd))
-        return -EFAULT;
-
-    switch (cmd.mode) {
-    case KSU_UMOUNT_WIPE: {
-        struct mount_entry *entry, *tmp;
-        down_write(&mount_list_lock);
-        list_for_each_entry_safe (entry, tmp, &mount_list, list) {
-            pr_info("wipe_umount_list: removing entry: %s\n", entry->umountable);
-            list_del(&entry->list);
-            kfree(entry->umountable);
-            kfree(entry);
-        }
-        up_write(&mount_list_lock);
-
-        return 0;
-    }
-
-    case KSU_UMOUNT_ADD: {
-        long len = strncpy_from_user(buf, (const char __user *)cmd.arg, 256);
-        if (len <= 0)
-            return -EFAULT;
-
-        buf[sizeof(buf) - 1] = '\0';
-
-        new_entry = kzalloc(sizeof(*new_entry), GFP_KERNEL);
-        if (!new_entry)
-            return -ENOMEM;
-
-        new_entry->umountable = kstrdup(buf, GFP_KERNEL);
-        if (!new_entry->umountable) {
-            kfree(new_entry);
-            return -ENOMEM;
-        }
-
-        down_write(&mount_list_lock);
-
-        // disallow dupes
-        // if this gets too many, we can consider moving this whole task to a kthread
-        list_for_each_entry (entry, &mount_list, list) {
-            if (!strcmp(entry->umountable, buf)) {
-                pr_info("cmd_add_try_umount: %s is already here!\n", buf);
-                up_write(&mount_list_lock);
-                kfree(new_entry->umountable);
-                kfree(new_entry);
-                return -EEXIST;
-            }
-        }
-
-        // now check flags and add
-        // this also serves as a null check
-        if (cmd.flags)
-            new_entry->flags = cmd.flags;
-        else
-            new_entry->flags = 0;
-
-        // debug
-        list_add(&new_entry->list, &mount_list);
-        up_write(&mount_list_lock);
-        pr_info("cmd_add_try_umount: %s added!\n", buf);
-
-        return 0;
-    }
-
-    // this is just strcmp'd wipe anyway
-    case KSU_UMOUNT_DEL: {
-        long len = strncpy_from_user(buf, (const char __user *)cmd.arg, sizeof(buf) - 1);
-        if (len <= 0)
-            return -EFAULT;
-
-        buf[sizeof(buf) - 1] = '\0';
-
-        down_write(&mount_list_lock);
-        list_for_each_entry_safe (entry, tmp, &mount_list, list) {
-            if (!strcmp(entry->umountable, buf)) {
-                pr_info("cmd_add_try_umount: entry removed: %s\n", entry->umountable);
-                list_del(&entry->list);
-                kfree(entry->umountable);
-                kfree(entry);
-            }
-        }
-        up_write(&mount_list_lock);
-
-        return 0;
-    }
-
-    default: {
-        pr_err("cmd_add_try_umount: invalid operation %u\n", cmd.mode);
-        return -EINVAL;
-    }
-
-    } // switch(cmd.mode)
-
-    return 0;
-}
-
 static int do_set_init_pgrp(void __user *arg)
 {
     int err;
@@ -758,12 +632,6 @@ static const struct ksu_ioctl_cmd_map ksu_ioctl_handlers[] = {
         .perm_check = manager_or_root
     },
     {
-        .cmd = KSU_IOCTL_UID_SHOULD_UMOUNT,
-        .name = "UID_SHOULD_UMOUNT",
-        .handler = do_uid_should_umount,
-        .perm_check = manager_or_root
-    },
-    {
         .cmd = KSU_IOCTL_GET_MANAGER_APPID,
         .name = "GET_MANAGER_APPID",
         .handler = do_get_manager_appid,
@@ -809,12 +677,6 @@ static const struct ksu_ioctl_cmd_map ksu_ioctl_handlers[] = {
         .cmd = KSU_IOCTL_NUKE_EXT4_SYSFS,
         .name = "NUKE_EXT4_SYSFS",
         .handler = do_nuke_ext4_sysfs,
-        .perm_check = manager_or_root
-    },
-    {
-        .cmd = KSU_IOCTL_ADD_TRY_UMOUNT,
-        .name = "ADD_TRY_UMOUNT",
-        .handler = add_try_umount,
         .perm_check = manager_or_root
     },
     {
@@ -878,15 +740,3 @@ void __init ksu_supercall_dump_commands(void)
     }
 }
 
-void ksu_supercall_cleanup_state(void)
-{
-    struct mount_entry *entry, *tmp;
-
-    down_write(&mount_list_lock);
-    list_for_each_entry_safe (entry, tmp, &mount_list, list) {
-        list_del(&entry->list);
-        kfree(entry->umountable);
-        kfree(entry);
-    }
-    up_write(&mount_list_lock);
-}

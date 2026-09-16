@@ -37,7 +37,6 @@
     <string name="home_support_content">KernelSU는 현재와 미래에도 항상 무료이며 오픈 소스입니다. 기부를 통해 여러분의 관심과 지원을 표현해 주세요.</string>
     <string name="about_source_code"><![CDATA[%1$s에서 소스 코드 보기<br/>%2$s 채널 참가하기]]></string>
     <string name="home_learn_kernelsu_url">https://kernelsu.org/guide/what-is-kernelsu.html</string>
-    <string name="settings_umount_modules_default_summary">앱 프로필 메뉴의 \"모듈 마운트 해제\" 설정에 대한 전역 기본값을 지정합니다. 활성화하면 개별 프로필이 설정되지 않은 앱에는 시스템에 대한 모듈의 모든 수정 사항이 제외됩니다.</string>
     <string name="restart_app">다시 시작</string>
     <string name="profile_selinux_rules">규칙</string>
     <string name="new_version_available">새 %s 버전을 사용할 수 있습니다, 여기를 눌러 업그레이드하세요!</string>
@@ -51,12 +50,9 @@
     <string name="profile_namespace_global">전역</string>
     <string name="profile_namespace_individual">개별</string>
     <string name="profile_groups">사용자 그룹</string>
-    <string name="profile_umount_modules">모듈 마운트 해제를 기본값으로</string>
     <string name="profile_selinux_context">SELinux 컨텍스트</string>
     <string name="profile_capabilities">권한</string>
     <string name="failed_to_update_app_profile">%s에 대한 앱 프로필 업데이트 실패</string>
-    <string name="settings_umount_modules_default">모듈 마운트 해제를 기본값으로</string>
-    <string name="profile_umount_modules_summary">이 옵션이 활성화되면 KernelSU는 이 앱에 대한 모듈의 모든 수정 사항을 복구합니다.</string>
     <string name="manager_update">업데이트</string>
     <string name="profile_selinux_domain">도메인</string>
     <string name="launch_app">실행</string>
@@ -152,8 +148,6 @@
     <string name="tab_info">정보</string>
     <string name="settings_sucompat">기존 su 명령</string>
     <string name="settings_sucompat_summary">/system/bin/su를 통한 루트 권한 획득 허용 (새 프로세스 전용)</string>
-    <string name="settings_kernel_umount">모듈 언마운트</string>
-    <string name="settings_kernel_umount_summary">앱 프로필에 따라 커널에서 모듈을 언마운트합니다</string>
     <string name="profile_flags_desc_no_new_privs">이 루트 프로필의 컨텍스트 내에서 KernelSU를 통한 추가 권한 상승을 방지합니다.</string>
     <string name="install_force_backup">순정 이미지로 백업</string>
     <string name="install_force_backup_summary">선택한 boot 이미지가 순정 이미지인지 확인하세요</string>
