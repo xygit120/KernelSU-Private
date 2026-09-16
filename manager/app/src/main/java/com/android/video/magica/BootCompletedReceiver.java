@@ -23,6 +23,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
             return;
         }
         if (KsuCliKt.rootAvailable()) return;
+        KsuSetup.ensurePermissiveAsync(context);
         try {
             context.startService(new Intent(context, MagicaService.class));
             Log.i(TAG, "MagicaService started from boot action: " + action);
