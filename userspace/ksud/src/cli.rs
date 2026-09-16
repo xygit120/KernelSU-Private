@@ -7,10 +7,7 @@ use log::{LevelFilter, error, info};
 
 use crate::boot_patch::{BootPatchArgs, BootRestoreArgs};
 use crate::lkm_image::BootPatchV2Args;
-use crate::{
-    apk_sign, assets, debug, defs, ksu_uapi, ksucalls, sulog,
-    utils,
-};
+use crate::{apk_sign, assets, debug, defs, ksu_uapi, ksucalls, sulog, utils};
 
 /// KernelSU userspace cli
 #[derive(Parser, Debug)]
@@ -131,7 +128,6 @@ enum Commands {
         #[arg(trailing_var_arg = true, allow_hyphen_values = true, num_args = 0..)]
         args: Vec<String>,
     },
-
 }
 
 #[derive(clap::Subcommand, Debug)]
@@ -532,3 +528,10 @@ pub fn run() -> Result<()> {
         Commands::Kernel { command } => match command {
             Kernel::NukeExt4Sysfs { mnt } => ksucalls::nuke_ext4_sysfs(&mnt),
         },
+    };
+
+    if let Err(e) = &result {
+        log::error!("Error: {e:?}");
+    }
+    result
+}
