@@ -5,7 +5,11 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * 21479 前置准备 + 越狱后清理（OnePlus 11 / PHB110 专用）。
@@ -20,15 +24,19 @@ import java.io.InputStreamReader;
  *
  * 注：本 ROM 上 kill zygote 软重启不可靠（zygote_secondary 监视者会触发整机
  * 重启、permissive 丢失），因此加载走 exploit -> ksud 直连，不重启框架。
+ *
+ * 日志：release 构建里 R8 会剥离 android.util.Log，所以同时写一份到
+ * /sdcard/Android/data/com.android.video/files/ksu_setup.log（adb shell 可读）。
  */
 public final class KsuSetup {
     private static final String TAG = "KernelSUMagica";
+    private static final String LOG_NAME = "ksu_setup.log";
     private static volatile boolean sStarted = false;
 
     private KsuSetup() {
     }
 
-    /** 由 MagicaService.onCreate / BootCompletedReceiver 调用；不阻塞调用线程。 */
+    /** 由 HomeScreen / BootCompletedReceiver 调用；不阻塞调用线程。 */
     public static void ensurePermissiveAsync(Context context) {
         if (sStarted) {
             return;
@@ -39,34 +47,37 @@ public final class KsuSetup {
             @Override
             public void run() {
                 try {
+                    logTo(app, "== ensurePermissiveAsync start, uid=" + android.os.Process.myUid());
                     if (isKernelSuWorking()) {
-                        Log.i(TAG, "KernelSU already working, skip 21479");
-                        cleanupGuardAsync();
+                        logTo(app, "KernelSU already working, skip 21479");
+                        cleanupGuardAsync(app);
                         return;
                     }
                     File bin = new File(app.getApplicationInfo().nativeLibraryDir, "libcheese_ksu.so");
                     File ksud = new File(app.getApplicationInfo().nativeLibraryDir, "libksud.so");
+                    logTo(app, "bin=" + bin + " exists=" + bin.isFile() + " canExec=" + bin.canExecute());
+                    logTo(app, "ksud=" + ksud + " exists=" + ksud.isFile() + " canExec=" + ksud.canExecute());
                     if (!bin.isFile() || !ksud.isFile()) {
-                        Log.e(TAG, "missing binaries: " + bin + " / " + ksud);
+                        logTo(app, "missing binaries, abort");
                         return;
                     }
-                    Log.i(TAG, "running 21479 -> permissive + ksud late-load (no app escalation)");
                     ProcessBuilder pb = new ProcessBuilder(bin.getAbsolutePath());
                     pb.environment().put("CHEESE_KSUD", ksud.getAbsolutePath());
                     pb.redirectErrorStream(true);
+                    logTo(app, "starting exploit...");
                     Process p = pb.start();
                     BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
                     String line;
                     while ((line = r.readLine()) != null) {
-                        Log.i(TAG, "[21479] " + line);
+                        logTo(app, "[21479] " + line);
                     }
                     r.close();
                     int rc = p.waitFor();
-                    Log.i(TAG, "21479 + late-load finished rc=" + rc);
+                    logTo(app, "21479 + late-load finished rc=" + rc);
                 } catch (Throwable t) {
-                    Log.e(TAG, "ksu setup failed", t);
+                    logTo(app, "ksu setup failed: " + t);
                 }
-                cleanupGuardAsync();
+                cleanupGuardAsync(app);
             }
         }, "ksu-setup").start();
     }
@@ -75,7 +86,7 @@ public final class KsuSetup {
      * 越狱成功后清理 oplus 安全模块：轮询等待 su 可用（KernelSU 起来），
      * 然后 `su -c` 卸载 guard/harden/keventupload/common（存在才卸）。
      */
-    public static void cleanupGuardAsync() {
+    public static void cleanupGuardAsync(final Context app) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -102,7 +113,7 @@ public final class KsuSetup {
                         int rc = p.waitFor();
                         if (rc == 0) {
                             String out = sb.toString();
-                            Log.i(TAG, "guard cleanup: " + out.replace('\n', ' '));
+                            logTo(app, "guard cleanup: " + out.replace('\n', ' '));
                             if (out.contains("rmmod-") || out.contains("grep") || out.trim().endsWith("0")) {
                                 // su 已可用：模块已卸或本就不在
                                 return;
@@ -112,7 +123,7 @@ public final class KsuSetup {
                         // su 还没起来，继续等
                     }
                 }
-                Log.w(TAG, "guard cleanup: su not available after timeout");
+                logTo(app, "guard cleanup: su not available after timeout");
             }
         }, "ksu-guard-cleanup").start();
     }
@@ -132,6 +143,31 @@ public final class KsuSetup {
             if (r != null) {
                 try {
                     r.close();
+                } catch (Throwable ignored) {
+                }
+            }
+        }
+    }
+
+    private static void logTo(Context app, String msg) {
+        Log.i(TAG, msg);
+        FileOutputStream fos = null;
+        try {
+            File dir = app.getExternalFilesDir(null);
+            if (dir == null) {
+                return;
+            }
+            if (!dir.isDirectory() && !dir.mkdirs()) {
+                return;
+            }
+            String ts = new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date());
+            fos = new FileOutputStream(new File(dir, LOG_NAME), true);
+            fos.write((ts + " " + msg + "\n").getBytes());
+        } catch (Throwable ignored) {
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
                 } catch (Throwable ignored) {
                 }
             }
