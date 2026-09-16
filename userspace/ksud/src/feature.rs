@@ -274,21 +274,6 @@ pub fn list_features() {
     println!("Available Features:");
     println!("{}", "=".repeat(80));
 
-    // Get managed features from modules
-    let managed_features_map: std::collections::HashMap<String, Vec<String>> =
-        std::collections::HashMap::new();
-
-    // Build a reverse map: feature_name -> Vec<module_id>
-    let mut feature_to_modules: HashMap<String, Vec<String>> = HashMap::new();
-    for (module_id, feature_list) in &managed_features_map {
-        for feature_name in feature_list {
-            feature_to_modules
-                .entry(feature_name.clone())
-                .or_default()
-                .push(module_id.clone());
-        }
-    }
-
     let all_features = [
         FeatureId::SuCompat,
         FeatureId::KernelUmount,
@@ -310,28 +295,8 @@ pub fn list_features() {
             "DISABLED".to_string()
         };
 
-        let managed_by = feature_to_modules.get(feature_id.name());
-        let managed_mark = if managed_by.is_some() {
-            " [MODULE_MANAGED]"
-        } else {
-            ""
-        };
-
-        println!(
-            "[{}] {} (ID={}){}",
-            status,
-            feature_id.name(),
-            id,
-            managed_mark
-        );
+        println!("[{}] {} (ID={})", status, feature_id.name(), id);
         println!("    {}", feature_id.description());
-
-        if let Some(modules) = managed_by {
-            println!(
-                "    ⚠️  Managed by module(s): {} (forced to 0 on initialization)",
-                modules.join(", ")
-            );
-        }
 
         println!();
     }
@@ -383,16 +348,6 @@ pub fn save_config() -> Result<()> {
 pub fn check_feature(id: &str) -> Result<()> {
     let feature_id = parse_feature_id(id)?;
 
-    // Check if this feature is managed by any module
-    let managed_features_map: std::collections::HashMap<String, Vec<String>> =
-        std::collections::HashMap::new();
-    let is_managed = false;
-
-    if is_managed {
-        println!("managed");
-        return Ok(());
-    }
-
     // Check if the feature is supported by kernel
     let (_value, supported) = crate::ksucalls::get_feature(feature_id as u32)
         .with_context(|| format!("Failed to get feature {id}"))?;
@@ -409,7 +364,7 @@ pub fn check_feature(id: &str) -> Result<()> {
 pub fn init_features() -> Result<()> {
     log::info!("Initializing features from config...");
 
-    let mut features = load_binary_config()?;
+    let features = load_binary_config()?;
 
     // Get managed features from active modules and skip them during init
 

@@ -324,7 +324,7 @@ fn write_sulog_config(key: &str, value: &str) -> Result<()> {
     entries.push((key.to_string(), value.to_string()));
     let mut out = String::new();
     for (k, v) in entries {
-        out.push_str(&format!("{k}={v}\n"));
+        let _ = writeln!(out, "{k}={v}");
     }
     std::fs::write(&path, out)?;
     Ok(())

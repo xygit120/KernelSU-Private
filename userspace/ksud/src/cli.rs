@@ -1,4 +1,4 @@
-use anyhow::{Context, Ok, Result};
+use anyhow::{Ok, Result};
 use clap::Parser;
 use std::path::PathBuf;
 
@@ -7,7 +7,7 @@ use log::{LevelFilter, error, info};
 
 use crate::boot_patch::{BootPatchArgs, BootRestoreArgs};
 use crate::lkm_image::BootPatchV2Args;
-use crate::{apk_sign, assets, debug, defs, ksu_uapi, ksucalls, sulog, utils};
+use crate::{apk_sign, assets, debug, defs, init_event, ksu_uapi, ksucalls, sulog, utils};
 
 /// KernelSU userspace cli
 #[derive(Parser, Debug)]
