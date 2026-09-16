@@ -204,8 +204,27 @@ public final class KsuSetup {
     }
 
     /**
+     * App 启动时调用：如果 KernelSU 已经在工作（late-load 重启 manager 之后），
+     * 补做 guard 模块清理 —— late-load 会 force-stop 本进程，按钮流程里的清理
+     * 线程会被杀掉，所以在重启后补一次。
+     */
+    public static void cleanupIfWorkingAsync(final Context context) {
+        final Context app = context.getApplicationContext();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (isKernelSuWorking()) {
+                    logTo(app, "cleanupIfWorking: KernelSU working, cleaning guard modules");
+                    cleanupGuardAsync(app);
+                }
+            }
+        }, "ksu-cleanup-check").start();
+    }
+
+    /**
      * 越狱成功后清理 oplus 安全模块：轮询等待 su 可用（KernelSU 起来），
-     * 然后 `su -c` 卸载 guard/harden/keventupload/common（存在才卸）。
+     * 然后 `su -c` 卸载 guard/harden/keventupload/common（存在才卸），
+     * 最后恢复 SELinux permissive（模块守护会把它改回 enforcing）。
      */
     public static void cleanupGuardAsync(final Context app) {
         new Thread(new Runnable() {
@@ -215,6 +234,7 @@ public final class KsuSetup {
                         + " oplus_security_keventupload oplus_secure_common; do"
                         + " if grep -q \"^$m \" /proc/modules 2>/dev/null; then"
                         + " rmmod $m 2>&1; echo \"rmmod-$m-rc=$?\"; fi; done;"
+                        + " setenforce 0 2>&1; echo \"setenforce-rc=$?\";"
                         + " grep -c \"^oplus_security_guard \" /proc/modules 2>/dev/null || echo 0";
                 for (int i = 0; i < 90; i++) {
                     try {

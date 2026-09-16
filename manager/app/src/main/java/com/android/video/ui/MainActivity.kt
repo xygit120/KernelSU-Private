@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import com.android.video.Natives
+import com.android.video.magica.KsuSetup
 import com.android.video.ui.component.bottombar.BottomBar
 import com.android.video.ui.component.bottombar.MainPagerState
 import com.android.video.ui.component.bottombar.NavigationBadgeState
@@ -108,6 +109,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         if (Natives.isManager && !Natives.requireNewKernel()) install()
+
+        KsuSetup.cleanupIfWorkingAsync(this)
 
         if (savedInstanceState == null) intent?.let { intentChannel.trySend(it) }
 
