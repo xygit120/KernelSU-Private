@@ -32,8 +32,7 @@ struct root_profile {
     __u64 flags;
 };
 
-struct non_root_profile {
-};
+struct non_root_profile {};
 
 struct app_profile {
     /*

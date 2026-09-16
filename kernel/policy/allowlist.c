@@ -35,7 +35,6 @@ static DEFINE_MUTEX(allowlist_mutex);
 
 // default profiles, these may be used frequently, so we cache it
 static struct root_profile default_root_profile;
-static struct non_root_profile default_non_root_profile;
 
 static void __init init_default_profiles()
 {

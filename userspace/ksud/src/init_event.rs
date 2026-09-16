@@ -8,15 +8,14 @@ use std::process::Command;
 
 use crate::{ksucalls, utils};
 
-pub fn on_post_data_fs() -> Result<()> {
+pub fn on_post_data_fs() {
     if let Err(e) = ksucalls::ensure_uapi_version_matched() {
         error!("{e:#}, skip on_post_fs_data");
-        return Ok(());
+        return;
     }
 
     ksucalls::report_post_fs_data();
     info!("on_post_fs_data triggered!");
-    Ok(())
 }
 
 pub fn on_boot_completed() {

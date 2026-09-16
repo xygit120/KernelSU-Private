@@ -50,4 +50,3 @@ int ksu_handle_setresuid(uid_t old_uid, uid_t new_uid)
 
     return 0;
 }
-
