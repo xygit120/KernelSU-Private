@@ -147,7 +147,25 @@ public final class KsuSetup {
         logTo(app, "shizuku: running exploit as shell...");
         IShizukuService service = IShizukuService.Stub.asInterface(
                 new ShizukuBinderWrapper(Shizuku.getBinder()));
-        IRemoteProcess p = service.newProcess(cmd, env, "/data/local/tmp");
+        final IRemoteProcess p = service.newProcess(cmd, env, "/data/local/tmp");
+        final Context appCtx = app;
+        Thread errThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    BufferedReader er = new BufferedReader(new InputStreamReader(
+                            new ParcelFileDescriptor.AutoCloseInputStream(p.getErrorStream())));
+                    String l;
+                    while ((l = er.readLine()) != null) {
+                        logTo(appCtx, "[21479e] " + l);
+                    }
+                    er.close();
+                } catch (Throwable t) {
+                    logTo(appCtx, "[21479e] reader ended: " + t);
+                }
+            }
+        }, "ksu-exploit-stderr");
+        errThread.start();
         BufferedReader r = new BufferedReader(new InputStreamReader(
                 new ParcelFileDescriptor.AutoCloseInputStream(p.getInputStream())));
         String line;
@@ -156,6 +174,7 @@ public final class KsuSetup {
         }
         r.close();
         int rc = p.waitFor();
+        errThread.join(2000);
         logTo(app, "shizuku exploit + late-load finished rc=" + rc);
     }
 
