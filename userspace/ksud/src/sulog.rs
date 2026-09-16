@@ -12,7 +12,7 @@ use std::process::{Command, Stdio};
 use std::thread;
 use std::time::Duration;
 
-use crate::{defs, ksucalls, module_config, utils};
+use crate::{defs, ksucalls, utils};
 
 const KSU_EVENT_QUEUE_TYPE_DROPPED: u16 = u16::MAX;
 const KSU_EVENT_RECORD_FLAG_INTERNAL: u16 = 1;
@@ -21,7 +21,6 @@ const READ_BUF_SIZE: usize = 8192;
 const SULOGD_RESTART_DELAY: Duration = Duration::from_secs(3);
 const SULOG_DIR_MODE: u32 = 0o700;
 const SULOG_FILE_MODE: u32 = 0o600;
-pub const SULOG_CONFIG_MODULE_ID: &str = "internal.ksud.sulogd";
 const SULOG_RETENTION_CONFIG_KEY: &str = "log.retention.days";
 const SULOG_MAX_FILE_SIZE_CONFIG_KEY: &str = "log.max_file_size";
 const DEFAULT_SULOG_RETENTION_DAYS: u64 = 3;
@@ -295,19 +294,49 @@ struct SulogConfig {
     max_file_size: u64,
 }
 
+fn sulog_config_path() -> std::path::PathBuf {
+    std::path::PathBuf::from(format!("{}sulog.config", defs::WORKING_DIR))
+}
+
+fn read_sulog_config(key: &str) -> Option<String> {
+    let content = std::fs::read_to_string(sulog_config_path()).ok()?;
+    for line in content.lines() {
+        if let Some((k, v)) = line.split_once('=') {
+            if k.trim() == key {
+                return Some(v.trim().to_string());
+            }
+        }
+    }
+    None
+}
+
+fn write_sulog_config(key: &str, value: &str) -> Result<()> {
+    let path = sulog_config_path();
+    let mut entries: Vec<(String, String)> = Vec::new();
+    if let Ok(content) = std::fs::read_to_string(&path) {
+        for line in content.lines() {
+            if let Some((k, v)) = line.split_once('=') {
+                entries.push((k.trim().to_string(), v.trim().to_string()));
+            }
+        }
+    }
+    entries.retain(|(k, _)| k != key);
+    entries.push((key.to_string(), value.to_string()));
+    let mut out = String::new();
+    for (k, v) in entries {
+        out.push_str(&format!("{k}={v}\n"));
+    }
+    std::fs::write(&path, out)?;
+    Ok(())
+}
+
 fn ensure_config_value(key: &str, default_value: u64) -> Result<String> {
-    let config = module_config::merge_configs(SULOG_CONFIG_MODULE_ID)?;
-    if let Some(value) = config.get(key) {
-        return Ok(value.clone());
+    if let Some(value) = read_sulog_config(key) {
+        return Ok(value);
     }
 
     let default_value = default_value.to_string();
-    module_config::set_config_value(
-        SULOG_CONFIG_MODULE_ID,
-        key,
-        &default_value,
-        module_config::ConfigType::Persist,
-    )?;
+    write_sulog_config(key, &default_value)?;
     Ok(default_value)
 }
 

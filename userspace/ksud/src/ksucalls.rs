@@ -126,18 +126,6 @@ fn report_event(event: u32) {
     let _ = ksuctl(ksu_uapi::KSU_IOCTL_REPORT_EVENT, &raw mut cmd);
 }
 
-pub fn report_post_fs_data() {
-    report_event(ksu_uapi::EVENT_POST_FS_DATA);
-}
-
-pub fn report_boot_complete() {
-    report_event(ksu_uapi::EVENT_BOOT_COMPLETED);
-}
-
-pub fn report_module_mounted() {
-    report_event(ksu_uapi::EVENT_MODULE_MOUNTED);
-}
-
 pub fn check_kernel_safemode() -> bool {
     let mut cmd = ksu_uapi::ksu_check_safemode_cmd { in_safe_mode: 0 };
     let _ = ksuctl(ksu_uapi::KSU_IOCTL_CHECK_SAFEMODE, &raw mut cmd);
@@ -237,41 +225,6 @@ pub fn nuke_ext4_sysfs(mnt: &str) -> anyhow::Result<()> {
         arg: c_mnt.as_ptr() as u64,
     };
     ksuctl(ksu_uapi::KSU_IOCTL_NUKE_EXT4_SYSFS, &raw mut ioctl_cmd)?;
-    Ok(())
-}
-
-/// Wipe all entries from umount list
-pub fn umount_list_wipe() -> std::io::Result<()> {
-    let mut cmd = ksu_uapi::ksu_add_try_umount_cmd {
-        arg: 0,
-        flags: 0,
-        mode: ksu_uapi::KSU_UMOUNT_WIPE,
-    };
-    ksuctl(ksu_uapi::KSU_IOCTL_ADD_TRY_UMOUNT, &raw mut cmd)?;
-    Ok(())
-}
-
-/// Add mount point to umount list
-pub fn umount_list_add(path: &str, flags: u32) -> anyhow::Result<()> {
-    let c_path = std::ffi::CString::new(path)?;
-    let mut cmd = ksu_uapi::ksu_add_try_umount_cmd {
-        arg: c_path.as_ptr() as u64,
-        flags,
-        mode: ksu_uapi::KSU_UMOUNT_ADD,
-    };
-    ksuctl(ksu_uapi::KSU_IOCTL_ADD_TRY_UMOUNT, &raw mut cmd)?;
-    Ok(())
-}
-
-/// Delete mount point from umount list
-pub fn umount_list_del(path: &str) -> anyhow::Result<()> {
-    let c_path = std::ffi::CString::new(path)?;
-    let mut cmd = ksu_uapi::ksu_add_try_umount_cmd {
-        arg: c_path.as_ptr() as u64,
-        flags: 0,
-        mode: ksu_uapi::KSU_UMOUNT_DEL,
-    };
-    ksuctl(ksu_uapi::KSU_IOCTL_ADD_TRY_UMOUNT, &raw mut cmd)?;
     Ok(())
 }
 

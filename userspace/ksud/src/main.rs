@@ -33,12 +33,6 @@ mod lkm_image_btf;
 #[cfg(target_os = "android")]
 mod magica;
 #[cfg(target_os = "android")]
-mod metamodule;
-#[cfg(target_os = "android")]
-mod module;
-#[cfg(target_os = "android")]
-mod module_config;
-#[cfg(target_os = "android")]
 mod profile;
 #[cfg(target_os = "android")]
 mod resetprop;

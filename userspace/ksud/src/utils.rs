@@ -14,7 +14,7 @@ use std::{
 };
 
 use crate::defs::KSU_TEMP_BACKUP_DIR_NAME;
-use crate::{assets, boot_patch, defs, ksucalls, module, restorecon};
+use crate::{assets, boot_patch, defs, ksucalls, restorecon};
 #[allow(unused_imports)]
 use std::fs::{Permissions, set_permissions};
 #[cfg(unix)]
@@ -218,10 +218,6 @@ pub fn umask(mask: u32) {
     process::umask(rustix::fs::Mode::from_raw_mode(mask));
 }
 
-pub fn has_magisk() -> bool {
-    which::which("magisk").is_ok()
-}
-
 fn link_ksud_to_bin() -> Result<()> {
     let ksu_bin = PathBuf::from(defs::DAEMON_PATH);
     let ksu_bin_link = PathBuf::from(defs::DAEMON_LINK_PATH);
@@ -278,17 +274,9 @@ pub fn install(libadbroot: Option<PathBuf>, data_path: Option<PathBuf>) -> Resul
 }
 
 pub fn uninstall(package_name: &str) -> Result<()> {
-    if Path::new(defs::MODULE_DIR).exists() {
-        println!("- Uninstall modules..");
-        module::uninstall_all_modules()?;
-        module::prune_modules()?;
-    }
     println!("- Removing directories..");
     std::fs::remove_dir_all(defs::WORKING_DIR).ok();
     std::fs::remove_file(defs::DAEMON_PATH).ok();
-    std::fs::remove_dir_all(defs::MODULE_DIR).ok();
-    std::fs::remove_dir_all(defs::PREINIT_DIR_WATCHDOG).ok();
-    std::fs::remove_dir_all(defs::PREINIT_DIR_DEFAULT).ok();
     println!("- Restore boot image..");
     boot_patch::restore(BootRestoreArgs {
         boot: None,

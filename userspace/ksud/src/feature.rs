@@ -258,36 +258,6 @@ pub fn set_feature(id: &str, value: u64) -> Result<()> {
     let feature_id = parse_feature_id(id)?;
 
     // Check if this feature is managed by any module
-    if let Ok(managed_features_map) = crate::module::get_managed_features() {
-        // Find which modules manage this feature
-        let managing_modules: Vec<&String> = managed_features_map
-            .iter()
-            .filter(|(_, features)| features.iter().any(|f| f == feature_id.name()))
-            .map(|(module_id, _)| module_id)
-            .collect();
-
-        if !managing_modules.is_empty() {
-            // Feature is managed, check if caller is an authorized module
-            let caller_module = std::env::var("KSU_MODULE").unwrap_or_default();
-
-            if caller_module.is_empty() || !managing_modules.contains(&&caller_module) {
-                bail!(
-                    "Feature '{}' is managed by module(s): {}. Direct modification is not allowed.",
-                    feature_id.name(),
-                    managing_modules
-                        .iter()
-                        .map(|s| s.as_str())
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                );
-            }
-
-            log::info!(
-                "Module '{caller_module}' is setting managed feature '{}'",
-                feature_id.name()
-            );
-        }
-    }
 
     set_kernel_feature(feature_id, value)?;
 
@@ -305,7 +275,8 @@ pub fn list_features() {
     println!("{}", "=".repeat(80));
 
     // Get managed features from modules
-    let managed_features_map = crate::module::get_managed_features().unwrap_or_default();
+    let managed_features_map: std::collections::HashMap<String, Vec<String>> =
+        std::collections::HashMap::new();
 
     // Build a reverse map: feature_name -> Vec<module_id>
     let mut feature_to_modules: HashMap<String, Vec<String>> = HashMap::new();
@@ -413,10 +384,9 @@ pub fn check_feature(id: &str) -> Result<()> {
     let feature_id = parse_feature_id(id)?;
 
     // Check if this feature is managed by any module
-    let managed_features_map = crate::module::get_managed_features().unwrap_or_default();
-    let is_managed = managed_features_map
-        .values()
-        .any(|features| features.iter().any(|f| f == feature_id.name()));
+    let managed_features_map: std::collections::HashMap<String, Vec<String>> =
+        std::collections::HashMap::new();
+    let is_managed = false;
 
     if is_managed {
         println!("managed");
@@ -442,46 +412,6 @@ pub fn init_features() -> Result<()> {
     let mut features = load_binary_config()?;
 
     // Get managed features from active modules and skip them during init
-    if let Ok(managed_features_map) = crate::module::get_managed_features() {
-        if !managed_features_map.is_empty() {
-            log::info!(
-                "Found {} modules managing features",
-                managed_features_map.len()
-            );
-
-            // Build a set of all managed feature IDs to skip
-            for (module_id, feature_list) in &managed_features_map {
-                log::info!(
-                    "Module '{module_id}' manages {} feature(s)",
-                    feature_list.len()
-                );
-
-                for feature_name in feature_list {
-                    if let Ok(feature_id) = parse_feature_id(feature_name) {
-                        let feature_id_u32 = feature_id as u32;
-                        // Remove managed features from config, let modules control them
-                        if features.remove(&feature_id_u32).is_some() {
-                            log::info!(
-                                "  - Skipping managed feature '{feature_name}' (controlled by module: {module_id})",
-                            );
-                        } else {
-                            log::info!(
-                                "  - Feature '{feature_name}' is managed by module '{module_id}', skipping",
-                            );
-                        }
-                    } else {
-                        log::warn!(
-                            "  - Unknown managed feature '{feature_name}' from module '{module_id}', ignoring",
-                        );
-                    }
-                }
-            }
-        }
-    } else {
-        log::warn!(
-            "Failed to get managed features from modules, continuing with normal initialization"
-        );
-    }
 
     if features.is_empty() {
         log::info!("No features to apply, skipping initialization");

@@ -60,6 +60,5 @@ fn restore_syscon_if_unlabeled<P: AsRef<Path>>(dir: P) -> Result<()> {
 
 pub fn restorecon() -> Result<()> {
     lsetfilecon(defs::DAEMON_PATH, KSU_CON)?;
-    restore_syscon_if_unlabeled(defs::MODULE_DIR)?;
     Ok(())
 }

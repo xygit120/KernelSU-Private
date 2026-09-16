@@ -15,7 +15,6 @@ rust-embed = { version = "8", features = [
     "debug-embed",
     "compression", # must clean build after updating binaries
 ] }
-which = "8"
 sha1 = "0.11"
 base16ct = { version = "1.0", features = ["alloc"] }
 sha256 = "1"
@@ -37,12 +36,6 @@ zip = { version = "8",  features = [
     "lzma",
     "xz",
 ], default-features = false }
-zip-extensions = { version = "0.14", features = [
-    "deflate",
-    "lzma",
-    "xz",
-], default-features = false }
-java-properties = { git = "https://github.com/ReSukiSU/java-properties.git", branch = "master", default-features = false }
 serde_json = "1"
 encoding_rs = "0.8"
 humansize = "2"

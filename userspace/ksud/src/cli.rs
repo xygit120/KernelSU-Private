@@ -7,9 +7,8 @@ use log::{LevelFilter, error, info};
 
 use crate::boot_patch::{BootPatchArgs, BootRestoreArgs};
 use crate::lkm_image::BootPatchV2Args;
-use crate::module::regenerate_preinit_rc;
 use crate::{
-    apk_sign, assets, debug, defs, init_event, ksu_uapi, ksucalls, module, module_config, sulog,
+    apk_sign, assets, debug, defs, ksu_uapi, ksucalls, sulog,
     utils,
 };
 
@@ -23,24 +22,9 @@ struct Args {
 
 #[derive(clap::Subcommand, Debug)]
 enum Commands {
-    /// Manage KernelSU modules
-    Module {
-        #[command(subcommand)]
-        command: Module,
-    },
-
-    /// Trigger `post-fs-data` event
-    PostFsData,
-
-    /// Trigger `service` event
-    Services,
-
     /// Run sulog reader daemon. Not for user. Use `ksud debug sulogd` to launch daemon.
     #[command(hide = true)]
     Sulogd,
-
-    /// Trigger `boot-complete` event
-    BootCompleted,
 
     /// Load kernelsu.ko and execute late-load stage scripts
     LateLoad {
@@ -148,11 +132,6 @@ enum Commands {
         args: Vec<String>,
     },
 
-    /// Manage initrc injection
-    Initrc {
-        #[command(subcommand)]
-        command: Initrc,
-    },
 }
 
 #[derive(clap::Subcommand, Debug)]
@@ -281,99 +260,6 @@ enum Sepolicy {
 }
 
 #[derive(clap::Subcommand, Debug)]
-enum Module {
-    /// Install module <ZIP>
-    Install {
-        /// module zip file path
-        zip: String,
-    },
-
-    /// Undo module uninstall mark <id>
-    UndoUninstall {
-        /// module id
-        id: String,
-    },
-
-    /// Uninstall module <id>
-    Uninstall {
-        /// module id
-        id: String,
-    },
-
-    /// enable module <id>
-    Enable {
-        /// module id
-        id: String,
-    },
-
-    /// disable module <id>
-    Disable {
-        // module id
-        id: String,
-    },
-
-    /// run action for module <id>
-    Action {
-        // module id
-        id: String,
-    },
-
-    /// list all modules
-    List,
-
-    /// manage module configuration
-    Config {
-        /// target internal module name (resolved as internal.<name>)
-        #[arg(long)]
-        internal: Option<String>,
-        #[command(subcommand)]
-        command: ModuleConfigCmd,
-    },
-}
-
-#[derive(clap::Subcommand, Debug)]
-enum ModuleConfigCmd {
-    /// Get a config value
-    Get {
-        /// config key
-        key: String,
-    },
-
-    /// Set a config value
-    Set {
-        /// config key
-        key: String,
-        /// config value (omit to read from stdin)
-        value: Option<String>,
-        /// read value from stdin (default if value not provided)
-        #[arg(long)]
-        stdin: bool,
-        /// use temporary config (cleared on reboot)
-        #[arg(short, long)]
-        temp: bool,
-    },
-
-    /// List all config entries
-    List,
-
-    /// Delete a config entry
-    Delete {
-        /// config key
-        key: String,
-        /// delete from temporary config
-        #[arg(short, long)]
-        temp: bool,
-    },
-
-    /// Clear all config entries
-    Clear {
-        /// clear temporary config
-        #[arg(short, long)]
-        temp: bool,
-    },
-}
-
-#[derive(clap::Subcommand, Debug)]
 enum Profile {
     /// get root profile's selinux policy of <package-name>
     GetSepolicy {
@@ -455,38 +341,6 @@ enum Kernel {
         /// mount point
         mnt: String,
     },
-    /// Manage umount list
-    Umount {
-        #[command(subcommand)]
-        command: UmountOp,
-    },
-    /// Notify that module is mounted
-    NotifyModuleMounted,
-}
-
-#[derive(clap::Subcommand, Debug)]
-enum UmountOp {
-    /// Add mount point to umount list
-    Add {
-        /// mount point path
-        mnt: String,
-        /// umount flags (default: 0, MNT_DETACH: 2)
-        #[arg(short, long, default_value = "0")]
-        flags: u32,
-    },
-    /// Delete mount point from umount list
-    Del {
-        /// mount point path
-        mnt: String,
-    },
-    /// Wipe all entries from umount list
-    Wipe,
-}
-
-#[derive(clap::Subcommand, Debug)]
-enum Initrc {
-    /// Regenerate preinit rc file
-    Refresh,
 }
 
 pub fn run() -> Result<()> {
@@ -513,118 +367,10 @@ pub fn run() -> Result<()> {
     log::info!("command: {:?}", cli.command);
 
     let result = match cli.command {
-        Commands::PostFsData => init_event::on_post_data_fs(),
-        Commands::BootCompleted => {
-            init_event::on_boot_completed();
-            Ok(())
-        }
-
         Commands::SoftReboot => init_event::soft_reboot(),
 
         Commands::Insmod { module, params } => debug::insmod(&module, &params),
 
-        Commands::Module { command } => {
-            utils::switch_mnt_ns(1)?;
-            match command {
-                Module::Install { zip } => module::install_module(&zip),
-                Module::UndoUninstall { id } => module::undo_uninstall_module(&id),
-                Module::Uninstall { id } => module::uninstall_module(&id),
-                Module::Enable { id } => module::enable_module(&id),
-                Module::Disable { id } => module::disable_module(&id),
-                Module::Action { id } => module::run_action(&id),
-                Module::List => module::list_modules(),
-                Module::Config { internal, command } => {
-                    let module_id = match internal {
-                        Some(internal_name) => format!("internal.{internal_name}"),
-                        None => std::env::var("KSU_MODULE").map_err(|_| {
-                            anyhow::anyhow!(
-                                "This command must be run in the context of a module or passed --internal <name>"
-                            )
-                        })?,
-                    };
-                    crate::module::validate_module_id(&module_id)?;
-
-                    match command {
-                        ModuleConfigCmd::Get { key } => {
-                            // Use merge_configs to respect priority (temp overrides persist)
-                            let config = module_config::merge_configs(&module_id)?;
-                            match config.get(&key) {
-                                Some(value) => {
-                                    println!("{value}");
-                                    Ok(())
-                                }
-                                None => anyhow::bail!("Key '{key}' not found"),
-                            }
-                        }
-                        ModuleConfigCmd::Set {
-                            key,
-                            value,
-                            stdin,
-                            temp,
-                        } => {
-                            // Validate key at CLI layer for better user experience
-                            module_config::validate_config_key(&key)?;
-
-                            // Read value from stdin or argument
-                            let value_str = match value {
-                                Some(v) if !stdin => v,
-                                _ => {
-                                    // Read from stdin
-                                    use std::io::Read;
-                                    let mut buffer = String::new();
-                                    std::io::stdin()
-                                        .read_to_string(&mut buffer)
-                                        .context("Failed to read from stdin")?;
-                                    buffer
-                                }
-                            };
-
-                            // Validate value
-                            module_config::validate_config_value(&value_str)?;
-
-                            let config_type = if temp {
-                                module_config::ConfigType::Temp
-                            } else {
-                                module_config::ConfigType::Persist
-                            };
-                            module_config::set_config_value(
-                                &module_id,
-                                &key,
-                                &value_str,
-                                config_type,
-                            )
-                        }
-                        ModuleConfigCmd::List => {
-                            let config = module_config::merge_configs(&module_id)?;
-                            if config.is_empty() {
-                                println!("No config entries found");
-                            } else {
-                                for (key, value) in config {
-                                    println!("{key}={value}");
-                                }
-                            }
-                            Ok(())
-                        }
-                        ModuleConfigCmd::Delete { key, temp } => {
-                            let config_type = if temp {
-                                module_config::ConfigType::Temp
-                            } else {
-                                module_config::ConfigType::Persist
-                            };
-                            module_config::delete_config_value(&module_id, &key, config_type)
-                        }
-                        ModuleConfigCmd::Clear { temp } => {
-                            let config_type = if temp {
-                                module_config::ConfigType::Temp
-                            } else {
-                                module_config::ConfigType::Persist
-                            };
-                            module_config::clear_config(&module_id, config_type)
-                        }
-                    }
-                }
-            }
-        }
         Commands::Install {
             libadbroot,
             data_path,
@@ -657,14 +403,6 @@ pub fn run() -> Result<()> {
                 }
             }
             result
-        }
-        Commands::Services => {
-            if ksucalls::get_version() <= 0 {
-                info!("KernelSU not available, exiting services");
-                std::process::exit(0);
-            }
-            init_event::on_services();
-            Ok(())
         }
         Commands::Sulogd => sulog::run_sulogd(),
         Commands::Profile { command } => match command {
@@ -793,23 +531,4 @@ pub fn run() -> Result<()> {
 
         Commands::Kernel { command } => match command {
             Kernel::NukeExt4Sysfs { mnt } => ksucalls::nuke_ext4_sysfs(&mnt),
-            Kernel::Umount { command } => match command {
-                UmountOp::Add { mnt, flags } => ksucalls::umount_list_add(&mnt, flags),
-                UmountOp::Del { mnt } => ksucalls::umount_list_del(&mnt),
-                UmountOp::Wipe => ksucalls::umount_list_wipe().map_err(Into::into),
-            },
-            Kernel::NotifyModuleMounted => {
-                ksucalls::report_module_mounted();
-                Ok(())
-            }
         },
-        Commands::Initrc { command } => match command {
-            Initrc::Refresh => regenerate_preinit_rc(),
-        },
-    };
-
-    if let Err(e) = &result {
-        log::error!("Error: {e:?}");
-    }
-    result
-}
