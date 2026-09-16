@@ -54,6 +54,7 @@ com-github-topjohnwu-libsu-io = { group = "com.github.topjohnwu.libsu", name = "
 
 dev-rikka-rikkax-parcelablelist = { module = "dev.rikka.rikkax.parcelablelist:parcelablelist", version.ref = "parcelablelist" }
 dev-rikka-shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
+dev-rikka-shizuku-aidl = { module = "dev.rikka.shizuku:aidl", version.ref = "shizuku" }
 dev-rikka-shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }

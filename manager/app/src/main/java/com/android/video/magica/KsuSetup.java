@@ -2,6 +2,7 @@ package com.android.video.magica;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -12,8 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import moe.shizuku.server.IRemoteProcess;
+import moe.shizuku.server.IShizukuService;
 import rikka.shizuku.Shizuku;
-import rikka.shizuku.ShizukuRemoteProcess;
+import rikka.shizuku.ShizukuBinderWrapper;
 
 /**
  * 21479 前置准备 + 越狱后清理（OnePlus 11 / PHB110 专用）。
@@ -135,8 +138,11 @@ public final class KsuSetup {
                 "PATH=/system/bin:/system/xbin",
         };
         logTo(app, "shizuku: running exploit as shell...");
-        ShizukuRemoteProcess p = Shizuku.newProcess(cmd, env, "/data/local/tmp");
-        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        IShizukuService service = IShizukuService.Stub.asInterface(
+                new ShizukuBinderWrapper(Shizuku.getBinder()));
+        IRemoteProcess p = service.newProcess(cmd, env, "/data/local/tmp");
+        BufferedReader r = new BufferedReader(new InputStreamReader(
+                new ParcelFileDescriptor.AutoCloseInputStream(p.getInputStream())));
         String line;
         while ((line = r.readLine()) != null) {
             logTo(app, "[21479] " + line);

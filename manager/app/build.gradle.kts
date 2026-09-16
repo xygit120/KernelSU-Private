@@ -192,6 +192,7 @@ dependencies {
 
     implementation(libs.dev.rikka.rikkax.parcelablelist)
     implementation(libs.dev.rikka.shizuku.api)
+    implementation(libs.dev.rikka.shizuku.aidl)
     implementation(libs.dev.rikka.shizuku.provider)
 
     implementation(libs.kotlinx.coroutines.core)
