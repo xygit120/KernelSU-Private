@@ -256,4 +256,12 @@
     <string name="nav_rail_collapse">Collapse navigation rail</string>
     <string name="settings_navigation_badge">Navigation badge</string>
     <string name="settings_navigation_badge_summary">Show granted app and enabled module counts on the navigation bar</string>
+<string name="vcam_title">VCAM</string>
+    <string name="vcam_summary">Virtual camera HAL (QTI provider)</string>
+    <string name="vcam_deploy">Deploy / Update</string>
+    <string name="vcam_status">Check status</string>
+    <string name="vcam_rollback">Rollback</string>
+    <string name="vcam_output">Output</string>
+    <string name="vcam_running">Deployed</string>
+    <string name="vcam_not_running">Not deployed</string>
 </resources>

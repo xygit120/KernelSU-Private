@@ -73,6 +73,7 @@ import com.android.video.ui.screen.install.InstallScreen
 import com.android.video.ui.screen.settings.SettingPager
 import com.android.video.ui.screen.sulog.SulogScreen
 import com.android.video.ui.screen.superuser.SuperUserPager
+import com.android.video.ui.screen.vcam.VcamScreen
 import com.android.video.ui.screen.template.AppProfileTemplateScreen
 import com.android.video.ui.screen.templateeditor.TemplateEditorScreen
 import com.android.video.ui.theme.KernelSUTheme
@@ -295,7 +296,8 @@ fun MainScreen(
                     when (page) {
                         0 -> if (isCurrentPage || contentReady) HomePager(navController, bottomInnerPadding, isCurrentPage)
                         1 -> if (isCurrentPage || contentReady) SuperUserPager(navController, bottomInnerPadding, isCurrentPage)
-                        2 -> if (isCurrentPage || contentReady) SettingPager(navController, bottomInnerPadding)
+                        2 -> if (isCurrentPage || contentReady) VcamScreen()
+                        3 -> if (isCurrentPage || contentReady) SettingPager(navController, bottomInnerPadding)
                     }
                 }
             }
