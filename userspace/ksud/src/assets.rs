@@ -9,7 +9,6 @@ mod android {
     use const_format::concatcp;
 
     pub const RESETPROP_PATH: &str = concatcp!(BINARY_DIR, "resetprop");
-    pub const BUSYBOX_PATH: &str = concatcp!(BINARY_DIR, "busybox");
     pub const BOOTCTL_PATH: &str = concatcp!(BINARY_DIR, "bootctl");
 
     pub fn ensure_binaries(ignore_if_exist: bool) -> anyhow::Result<()> {

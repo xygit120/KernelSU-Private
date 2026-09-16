@@ -121,17 +121,6 @@ pub fn grant_root() -> std::io::Result<()> {
     Ok(())
 }
 
-fn report_event(event: u32) {
-    let mut cmd = ksu_uapi::ksu_report_event_cmd { event };
-    let _ = ksuctl(ksu_uapi::KSU_IOCTL_REPORT_EVENT, &raw mut cmd);
-}
-
-pub fn check_kernel_safemode() -> bool {
-    let mut cmd = ksu_uapi::ksu_check_safemode_cmd { in_safe_mode: 0 };
-    let _ = ksuctl(ksu_uapi::KSU_IOCTL_CHECK_SAFEMODE, &raw mut cmd);
-    cmd.in_safe_mode != 0
-}
-
 pub fn set_sepolicy(payload: *const u8, payload_len: u64) -> std::io::Result<i32> {
     let mut ioctl_cmd = crate::ksu_uapi::ksu_set_sepolicy_cmd {
         data_len: payload_len,

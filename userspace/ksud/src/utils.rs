@@ -54,30 +54,6 @@ macro_rules! debug_select {
     }};
 }
 
-pub fn ensure_clean_dir(dir: impl AsRef<Path>) -> Result<()> {
-    let path = dir.as_ref();
-    log::debug!("ensure_clean_dir: {}", path.display());
-    if path.exists() {
-        log::debug!("ensure_clean_dir: {} exists, remove it", path.display());
-        std::fs::remove_dir_all(path)?;
-    }
-    Ok(std::fs::create_dir_all(path)?)
-}
-
-pub fn ensure_file_exists<T: AsRef<Path>>(file: T) -> Result<()> {
-    match File::options().write(true).create_new(true).open(&file) {
-        std::result::Result::Ok(_) => Ok(()),
-        Err(err) => {
-            if err.kind() == AlreadyExists && file.as_ref().is_file() {
-                Ok(())
-            } else {
-                Err(Error::from(err))
-                    .with_context(|| format!("{} is not a regular file", file.as_ref().display()))
-            }
-        }
-    }
-}
-
 pub fn ensure_dir_exists<T: AsRef<Path>>(dir: T) -> Result<()> {
     let result = create_dir_all(&dir);
     if dir.as_ref().is_dir() && result.is_ok() {
@@ -147,30 +123,6 @@ pub fn getprop(name: &str) -> Option<String> {
         );
     }
     value
-}
-
-pub fn is_safe_mode() -> bool {
-    let safemode = getprop("persist.sys.safemode")
-        .as_ref()
-        .is_some_and(|prop| prop == "1")
-        || getprop("ro.sys.safemode")
-            .as_ref()
-            .is_some_and(|prop| prop == "1");
-    log::info!("safemode: {safemode}");
-    if safemode {
-        return true;
-    }
-    let safemode = ksucalls::check_kernel_safemode();
-    log::info!("kernel_safemode: {safemode}");
-    safemode
-}
-
-pub fn get_zip_uncompressed_size(zip_path: &str) -> Result<u64> {
-    let mut zip = zip::ZipArchive::new(std::fs::File::open(zip_path)?)?;
-    let total: u64 = (0..zip.len())
-        .map(|i| zip.by_index(i).unwrap().size())
-        .sum();
-    Ok(total)
 }
 
 pub fn switch_mnt_ns(pid: i32) -> Result<()> {

@@ -301,10 +301,11 @@ fn sulog_config_path() -> std::path::PathBuf {
 fn read_sulog_config(key: &str) -> Option<String> {
     let content = std::fs::read_to_string(sulog_config_path()).ok()?;
     for line in content.lines() {
-        if let Some((k, v)) = line.split_once('=') {
-            if k.trim() == key {
-                return Some(v.trim().to_string());
-            }
+        let Some((k, v)) = line.split_once('=') else {
+            continue;
+        };
+        if k.trim() == key {
+            return Some(v.trim().to_string());
         }
     }
     None
