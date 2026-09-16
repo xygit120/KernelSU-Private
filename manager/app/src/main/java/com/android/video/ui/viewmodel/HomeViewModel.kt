@@ -22,7 +22,7 @@ import com.android.video.ui.screen.home.SystemInfo
 import com.android.video.ui.screen.home.getManagerVersion
 import com.android.video.ui.util.checkNewVersion
 import com.android.video.ui.util.getSELinuxStatusRaw
-import com.android.video.ui.util.module.LatestVersionInfo
+import com.android.video.ui.util.LatestVersionInfo
 import com.android.video.ui.util.resolveDeviceName
 import com.android.video.ui.util.rootAvailable
 

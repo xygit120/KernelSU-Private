@@ -147,8 +147,8 @@ private fun UpdateCard(
     actions: HomeActions,
 ) {
     val newVersion = state.latestVersionInfo
-    val title = stringResource(id = R.string.module_changelog)
-    val updateText = stringResource(id = R.string.module_update)
+    val title = stringResource(id = R.string.manager_changelog)
+    val updateText = stringResource(id = R.string.manager_update)
 
     AnimatedVisibility(
         visible = state.hasUpdate,
@@ -526,7 +526,7 @@ private fun previewHomeScreenState(
     isSafeMode = isSafeMode,
     isLateLoadMode = isLateLoadMode,
     checkUpdateEnabled = false,
-    latestVersionInfo = com.android.video.ui.util.module.LatestVersionInfo(),
+    latestVersionInfo = com.android.video.ui.util.LatestVersionInfo(),
     currentManagerVersionCode = 10000,
     systemInfo = previewSystemInfo.copy(selinuxStatus = selinuxStatus),
     kernelUAPIVersion = 1,

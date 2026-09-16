@@ -12,7 +12,6 @@ import com.android.video.Natives
 import com.android.video.ksuApp
 import com.android.video.magica.BootCompletedReceiver
 import com.android.video.ui.UiMode
-import com.android.video.ui.screen.modulerepo.RepoSort
 import com.android.video.ui.util.execKsud
 import com.android.video.ui.util.getFeaturePersistValue
 import com.android.video.ui.util.getFeatureStatus
@@ -44,10 +43,6 @@ class SettingsRepositoryImpl : SettingsRepository {
     override var checkUpdate: Boolean
         get() = prefs.getBoolean("check_update", true)
         set(value) = prefs.edit { putBoolean("check_update", value) }
-
-    override var checkModuleUpdate: Boolean
-        get() = prefs.getBoolean("module_check_update", true)
-        set(value) = prefs.edit { putBoolean("module_check_update", value) }
 
     override var themeMode: Int
         get() = prefs.getInt("color_mode", 0)
@@ -96,18 +91,6 @@ class SettingsRepositoryImpl : SettingsRepository {
     override var enableWebDebugging: Boolean
         get() = prefs.getBoolean("enable_web_debugging", false)
         set(value) = prefs.edit { putBoolean("enable_web_debugging", value) }
-
-    override var moduleSortEnabledFirst: Boolean
-        get() = prefs.getBoolean("module_sort_enabled_first", false)
-        set(value) = prefs.edit { putBoolean("module_sort_enabled_first", value) }
-
-    override var moduleSortActionFirst: Boolean
-        get() = prefs.getBoolean("module_sort_action_first", false)
-        set(value) = prefs.edit { putBoolean("module_sort_action_first", value) }
-
-    override var moduleRepoSortOrder: Int
-        get() = prefs.getInt("module_repo_sort_order", RepoSort.UPDATED.ordinal)
-        set(value) = prefs.edit { putInt("module_repo_sort_order", value) }
 
     override var superuserShowSystemApps: Boolean
         get() = prefs.getBoolean("show_system_apps", false)

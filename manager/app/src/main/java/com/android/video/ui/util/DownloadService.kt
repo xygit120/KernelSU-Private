@@ -35,12 +35,10 @@ class DownloadService : Service() {
         const val ACTION_DOWNLOAD = "com.android.video.action.DOWNLOAD"
         const val ACTION_CANCEL = "com.android.video.action.CANCEL_DOWNLOAD"
         const val ACTION_DISMISS_DOWNLOAD = "com.android.video.action.DISMISS_DOWNLOAD"
-        const val ACTION_INSTALL_MODULE = "com.android.video.action.INSTALL_MODULE"
         const val EXTRA_URL = "url"
         const val EXTRA_TOKEN = "token"
         const val EXTRA_FILE_NAME = "fileName"
         const val EXTRA_DOWNLOAD_ID = "downloadId"
-        const val EXTRA_MODULE_URI = "moduleUri"
         const val EXTRA_FILE_PATH = "filePath"
 
         private const val COMPLETION_NOTIFICATION_ID_BASE = 100000
@@ -224,27 +222,6 @@ class DownloadService : Service() {
             .setContentText(getString(R.string.download_complete_content, fileName))
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .setAutoCancel(true)
-
-        // Add "Install" action button
-        val installIntent = Intent(this, MainActivity::class.java).apply {
-            action = ACTION_INSTALL_MODULE
-            putExtra(EXTRA_MODULE_URI, uri.toString())
-            putExtra(EXTRA_DOWNLOAD_ID, id)
-            putExtra(EXTRA_TOKEN, SettingsRepositoryImpl().intentToken)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        val installPendingIntent = PendingIntent.getActivity(
-            this,
-            id,
-            installIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        builder.addAction(
-            android.R.drawable.ic_menu_save,
-            getString(R.string.download_install),
-            installPendingIntent
-        )
-        builder.setContentIntent(installPendingIntent)
 
         // Add "Cancel" action button
         val dismissIntent = Intent(this, DownloadService::class.java).apply {

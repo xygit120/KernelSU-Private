@@ -2,7 +2,7 @@ package com.android.video.ui.screen.home
 
 import androidx.compose.runtime.Immutable
 import com.android.video.KernelVersion
-import com.android.video.ui.util.module.LatestVersionInfo
+import com.android.video.ui.util.LatestVersionInfo
 
 @Immutable
 data class HomeUiState(

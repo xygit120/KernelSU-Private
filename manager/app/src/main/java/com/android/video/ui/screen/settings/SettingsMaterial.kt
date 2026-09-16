@@ -106,15 +106,6 @@ fun SettingPagerMaterial(
                                 onCheckedChange = actions.onSetCheckUpdate
                             )
                         },
-                        {
-                            SegmentedSwitchItem(
-                                icon = Icons.Rounded.UploadFile,
-                                title = stringResource(id = R.string.settings_module_check_update),
-                                summary = stringResource(id = R.string.settings_check_update_summary),
-                                checked = uiState.checkModuleUpdate,
-                                onCheckedChange = actions.onSetCheckModuleUpdate
-                            )
-                        }
                     )
                 )
             }

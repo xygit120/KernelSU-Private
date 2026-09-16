@@ -9,7 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowInsetsControllerCompat
-import com.android.video.ui.webui.MonetColorsProvider
+import com.android.video.ui.theme.MonetColorsProvider
 
 @Composable
 fun MaterialKernelSUTheme(

@@ -53,7 +53,7 @@ import com.android.video.ui.component.rebootlistpopup.RebootListPopupMiuix
 import com.android.video.ui.theme.LocalEnableBlur
 import com.android.video.ui.theme.isInDarkTheme
 import com.android.video.ui.util.BlurredBar
-import com.android.video.ui.util.module.LatestVersionInfo
+import com.android.video.ui.util.LatestVersionInfo
 import com.android.video.ui.util.rememberBlurBackdrop
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -187,8 +187,8 @@ private fun UpdateCard(
     actions: HomeActions,
 ) {
     val newVersion = state.latestVersionInfo
-    val title = stringResource(id = R.string.module_changelog)
-    val updateText = stringResource(id = R.string.module_update)
+    val title = stringResource(id = R.string.manager_changelog)
+    val updateText = stringResource(id = R.string.manager_update)
     val updateDialog = rememberConfirmDialog(onConfirm = { actions.onOpenUrl(newVersion.downloadUrl) })
 
     AnimatedVisibility(

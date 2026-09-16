@@ -5,9 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import com.android.video.ui.screen.flash.FlashIt
-import com.android.video.ui.screen.modulerepo.RepoModuleArg
 import com.android.video.ui.util.FlashItSerializer
-import com.android.video.ui.util.RepoModuleArgSerializer
 import com.android.video.ui.util.TemplateInfoSerializer
 import com.android.video.ui.viewmodel.TemplateViewModel
 
@@ -27,10 +25,6 @@ sealed interface Route : NavKey, Parcelable {
     @Parcelize
     @Serializable
     data object SuperUser : Route
-
-    @Parcelize
-    @Serializable
-    data object Module : Route
 
     @Parcelize
     @Serializable
@@ -69,17 +63,5 @@ sealed interface Route : NavKey, Parcelable {
 
     @Parcelize
     @Serializable
-    data class ModuleRepoDetail(@Serializable(with = RepoModuleArgSerializer::class) val module: RepoModuleArg) : Route
-
-    @Parcelize
-    @Serializable
-    data object ModuleRepo : Route
-
-    @Parcelize
-    @Serializable
     data class Flash(@Serializable(with = FlashItSerializer::class) val flashIt: FlashIt) : Route
-
-    @Parcelize
-    @Serializable
-    data class ExecuteModuleAction(val moduleId: String, val fromShortcut: Boolean = false) : Route
 }

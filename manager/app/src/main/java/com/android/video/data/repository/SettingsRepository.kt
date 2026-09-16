@@ -3,7 +3,6 @@ package com.android.video.data.repository
 interface SettingsRepository {
     var uiMode: String
     var checkUpdate: Boolean
-    var checkModuleUpdate: Boolean
     var themeMode: Int
     var miuixMonet: Boolean
     var keyColor: Int
@@ -16,9 +15,6 @@ interface SettingsRepository {
     var enableNavigationBadge: Boolean
     var pageScale: Float
     var enableWebDebugging: Boolean
-    var moduleSortEnabledFirst: Boolean
-    var moduleSortActionFirst: Boolean
-    var moduleRepoSortOrder: Int
     var superuserShowSystemApps: Boolean
     var superuserShowOnlyPrimaryUserApps: Boolean
     var superuserSortOption: Int

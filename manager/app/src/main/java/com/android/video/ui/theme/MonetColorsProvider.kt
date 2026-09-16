@@ -1,4 +1,4 @@
-package com.android.video.ui.webui
+package com.android.video.ui.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme

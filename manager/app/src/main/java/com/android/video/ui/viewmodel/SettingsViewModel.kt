@@ -33,7 +33,6 @@ class SettingsViewModel(
     fun refresh() {
         viewModelScope.launch {
             val checkUpdate = repo.checkUpdate
-            val checkModuleUpdate = repo.checkModuleUpdate
             val themeMode = repo.themeMode
             val miuixMonet = repo.miuixMonet
             val keyColor = repo.keyColor
@@ -75,7 +74,6 @@ class SettingsViewModel(
                 it.copy(
                     uiMode = uiMode,
                     checkUpdate = checkUpdate,
-                    checkModuleUpdate = checkModuleUpdate,
                     themeMode = themeMode,
                     miuixMonet = miuixMonet,
                     keyColor = keyColor,
@@ -144,11 +142,6 @@ class SettingsViewModel(
         repo.uiMode = mode
         repo.themeMode = newThemeMode
         _uiState.update { it.copy(uiMode = mode, themeMode = newThemeMode) }
-    }
-
-    fun setCheckModuleUpdate(enabled: Boolean) {
-        repo.checkModuleUpdate = enabled
-        _uiState.update { it.copy(checkModuleUpdate = enabled) }
     }
 
     fun setThemeMode(mode: Int) {

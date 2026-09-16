@@ -4,7 +4,7 @@ import android.net.Uri
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import com.android.video.ksuApp
-import com.android.video.ui.util.module.LatestVersionInfo
+import com.android.video.ui.util.LatestVersionInfo
 import okhttp3.Request
 
 /**

@@ -1,4 +1,4 @@
-package com.android.video.ui.util.module
+package com.android.video.ui.util
 
 data class LatestVersionInfo(
     val versionCode: Int = 0,

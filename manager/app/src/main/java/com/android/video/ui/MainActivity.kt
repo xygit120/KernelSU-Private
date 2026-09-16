@@ -60,7 +60,6 @@ import com.android.video.ui.component.bottombar.NavigationBadgeState
 import com.android.video.ui.component.bottombar.SideRail
 import com.android.video.ui.component.bottombar.rememberMainPagerState
 import com.android.video.ui.component.bottombar.useNavigationRail
-import com.android.video.ui.navigation3.IntentDispatcher
 import com.android.video.ui.navigation3.LocalNavigator
 import com.android.video.ui.navigation3.Navigator
 import com.android.video.ui.navigation3.Route
@@ -68,13 +67,9 @@ import com.android.video.ui.navigation3.rememberNavigator
 import com.android.video.ui.screen.about.AboutScreen
 import com.android.video.ui.screen.appprofile.AppProfileScreen
 import com.android.video.ui.screen.colorpalette.ColorPaletteScreen
-import com.android.video.ui.screen.executemoduleaction.ExecuteModuleActionScreen
 import com.android.video.ui.screen.flash.FlashScreen
 import com.android.video.ui.screen.home.HomePager
 import com.android.video.ui.screen.install.InstallScreen
-import com.android.video.ui.screen.module.ModulePager
-import com.android.video.ui.screen.modulerepo.ModuleRepoDetailScreen
-import com.android.video.ui.screen.modulerepo.ModuleRepoScreen
 import com.android.video.ui.screen.settings.SettingPager
 import com.android.video.ui.screen.sulog.SulogScreen
 import com.android.video.ui.screen.superuser.SuperUserPager
@@ -93,7 +88,6 @@ import com.android.video.ui.util.rememberContentReady
 import com.android.video.ui.util.rootAvailable
 import com.android.video.ui.viewmodel.MainActivityViewModel
 import com.android.video.ui.viewmodel.MainPagerConfig
-import com.android.video.ui.viewmodel.ModuleViewModel
 import com.android.video.ui.viewmodel.SuperUserViewModel
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.blur.layerBackdrop
@@ -154,7 +148,6 @@ class MainActivity : ComponentActivity() {
                 LocalUiMode provides uiMode,
             ) {
                 KernelSUTheme(appSettings = appSettings, uiMode = uiMode) {
-                    IntentDispatcher(intentChannel = intentChannel)
                     val mainScreenEntry = @Composable {
                         MainScreen(
                             initialPage = selectedMainPage,
@@ -190,14 +183,10 @@ class MainActivity : ComponentActivity() {
                                 entry<Route.AppProfileTemplate> { AppProfileTemplateScreen() }
                                 entry<Route.TemplateEditor> { key -> TemplateEditorScreen(key.template, key.readOnly) }
                                 entry<Route.AppProfile> { key -> AppProfileScreen(key.uid) }
-                                entry<Route.ModuleRepo> { ModuleRepoScreen() }
-                                entry<Route.ModuleRepoDetail> { key -> ModuleRepoDetailScreen(key.module) }
                                 entry<Route.Install> { InstallScreen() }
                                 entry<Route.Flash> { key -> FlashScreen(key.flashIt) }
-                                entry<Route.ExecuteModuleAction> { key -> ExecuteModuleActionScreen(key.moduleId, key.fromShortcut) }
                                 entry<Route.Home> { mainScreenEntry() }
                                 entry<Route.SuperUser> { mainScreenEntry() }
-                                entry<Route.Module> { mainScreenEntry() }
                                 entry<Route.Settings> { mainScreenEntry() }
                             }
                         )
@@ -242,17 +231,6 @@ fun MainScreen(
 
     val enableNavigationBadge = LocalEnableNavigationBadge.current
     val badgeEnabled = enableNavigationBadge && isFullFeatured
-    val moduleViewModel = viewModel<ModuleViewModel>()
-    val moduleUiState by moduleViewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(badgeEnabled) {
-        // The module list normally loads when the module pager is first visited; load it eagerly
-        // so the badge is populated while the user is still on another tab.
-        if (badgeEnabled && moduleViewModel.uiState.value.modules.isEmpty()) {
-            moduleViewModel.initializePreferences()
-            moduleViewModel.loadModuleList()
-            moduleViewModel.syncModuleUpdateInfo(moduleViewModel.uiState.value.modules)
-        }
-    }
 
     // Loading the app list just for a badge is too expensive; read the kernel allowlist instead.
     val superUserViewModel = viewModel<SuperUserViewModel>()
@@ -269,8 +247,6 @@ fun MainScreen(
     val navigationBadge = if (badgeEnabled) {
         NavigationBadgeState(
             superuserCount = superuserCount,
-            moduleEnabledCount = moduleUiState.modules.count { it.enabled },
-            moduleUpdatableCount = moduleUiState.updateInfo.count { it.value.downloadUrl.isNotBlank() },
         )
     } else {
         NavigationBadgeState()
@@ -319,8 +295,7 @@ fun MainScreen(
                     when (page) {
                         0 -> if (isCurrentPage || contentReady) HomePager(navController, bottomInnerPadding, isCurrentPage)
                         1 -> if (isCurrentPage || contentReady) SuperUserPager(navController, bottomInnerPadding, isCurrentPage)
-                        2 -> if (isCurrentPage || contentReady) ModulePager(bottomInnerPadding, isCurrentPage)
-                        3 -> if (isCurrentPage || contentReady) SettingPager(navController, bottomInnerPadding)
+                        2 -> if (isCurrentPage || contentReady) SettingPager(navController, bottomInnerPadding)
                     }
                 }
             }

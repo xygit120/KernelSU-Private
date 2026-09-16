@@ -5,6 +5,4 @@
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
-    <style name="Theme.KernelSU.WebUI" parent="Theme.KernelSU" />
-
 </resources>
