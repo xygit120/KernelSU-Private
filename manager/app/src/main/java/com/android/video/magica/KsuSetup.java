@@ -77,6 +77,19 @@ public final class KsuSetup {
                         if (requestCode == SHIZUKU_REQ && grantResult == PackageManager.PERMISSION_GRANTED) {
                             sStarted = false;
                             ensurePermissiveAsync(app);
+                        } else if (requestCode == SHIZUKU_REQ) {
+                            logTo(app, "shizuku permission denied, falling back to direct app-context run");
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        runDirect(app);
+                                    } catch (Throwable t) {
+                                        logTo(app, "direct fallback failed: " + t);
+                                    }
+                                    cleanupGuardAsync(app);
+                                }
+                            }, "ksu-direct-fallback").start();
                         }
                     }
                 });
@@ -123,6 +136,10 @@ public final class KsuSetup {
                     }
                 } catch (Throwable t) {
                     logTo(app, "ksu setup failed: " + t);
+                } finally {
+                    // Allow retries: a previous attempt (e.g. the boot receiver)
+                    // may have failed before KernelSU became available.
+                    sStarted = false;
                 }
                 cleanupGuardAsync(app);
             }
