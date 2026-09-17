@@ -105,6 +105,21 @@ fun VcamScreen() {
             }
         }
 
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = { run("mode-real") { VcamManager.setMode(it, "real") } },
+                enabled = !busy,
+            ) {
+                Text(stringResource(R.string.vcam_mode_real))
+            }
+            OutlinedButton(
+                onClick = { run("mode-virtual") { VcamManager.setMode(it, "virtual") } },
+                enabled = !busy,
+            ) {
+                Text(stringResource(R.string.vcam_mode_virtual))
+            }
+        }
+
         if (busy) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(modifier = Modifier.height(20.dp))

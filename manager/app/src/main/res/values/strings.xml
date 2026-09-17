@@ -264,4 +264,6 @@
     <string name="vcam_output">Output</string>
     <string name="vcam_running">Deployed</string>
     <string name="vcam_not_running">Not deployed</string>
+    <string name="vcam_mode_real">Real camera</string>
+    <string name="vcam_mode_virtual">Virtual camera</string>
 </resources>

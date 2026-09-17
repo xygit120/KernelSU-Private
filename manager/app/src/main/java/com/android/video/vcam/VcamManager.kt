@@ -83,4 +83,48 @@ object VcamManager {
     fun status(context: Context): String = runAction(context, "status")
 
     fun rollback(context: Context): String = runAction(context, "rollback")
+
+    /** Current real/virtual mode as recorded by the runtime. */
+    fun currentMode(context: Context): String {
+        val su = KsuSetup.suPath() ?: return "unknown"
+        return try {
+            val p = Runtime.getRuntime().exec(arrayOf(su, "-c", "cat $APP_DIR/mode-current 2>/dev/null"))
+            val out = p.inputStream.bufferedReader().readText().trim()
+            p.waitFor()
+            out.ifEmpty { "unknown" }
+        } catch (t: Throwable) {
+            "unknown"
+        }
+    }
+
+    /**
+     * Switch between the real and the virtual camera through mode-switch.sh.
+     * The script requires the live provider pid and a token of the form
+     * "<pid>-<n>", so both are derived here instead of being accepted from UI.
+     */
+    fun setMode(context: Context, mode: String): String {
+        if (mode != "real" && mode != "virtual") {
+            return "ERROR: bad mode $mode"
+        }
+        if (!ensurePayload(context)) {
+            return "ERROR: payload extraction failed"
+        }
+        val su = KsuSetup.suPath()
+            ?: return "ERROR: no working su binary found (is KernelSU active?)"
+        val dir = payloadDir(context)
+        val cmd = "vpid=\$(pidof vcam11-v37 | tr -d '\\r'); " +
+            "[ -n \"\$vpid\" ] || { echo 'ERROR: vcam11 runtime is not running'; exit 1; }; " +
+            "exec sh ${dir.absolutePath}/mode-switch.sh $mode \"\$vpid\" \"\$vpid-\$(date +%s)\""
+        return try {
+            val process = Runtime.getRuntime().exec(arrayOf(su, "-c", cmd))
+            val out = process.inputStream.bufferedReader().readText()
+            val err = process.errorStream.bufferedReader().readText()
+            val rc = process.waitFor()
+            val text = (out + err).trim()
+            if (rc == 0) text.ifEmpty { "OK" } else "ERROR(rc=$rc)\n$text"
+        } catch (t: Throwable) {
+            Log.e(TAG, "setMode $mode failed", t)
+            "ERROR: $t"
+        }
+    }
 }
