@@ -224,7 +224,7 @@ public final class KsuSetup {
     /**
      * 越狱成功后清理 oplus 安全模块：轮询等待 su 可用（KernelSU 起来），
      * 然后 `su -c` 卸载 guard/harden/keventupload/common（存在才卸），
-     * 最后恢复 SELinux permissive（模块守护会把它改回 enforcing）。
+     * 最后显式恢复 SELinux Enforcing（guard 守护已卸载，不会再自动恢复）。
      */
     public static void cleanupGuardAsync(final Context app) {
         new Thread(new Runnable() {
@@ -234,7 +234,7 @@ public final class KsuSetup {
                         + " oplus_security_keventupload oplus_secure_common; do"
                         + " if grep -q \"^$m \" /proc/modules 2>/dev/null; then"
                         + " rmmod $m 2>&1; echo \"rmmod-$m-rc=$?\"; fi; done;"
-                        + " setenforce 0 2>&1; echo \"setenforce-rc=$?\";"
+                        + " setenforce 1 2>&1; echo \"setenforce-rc=$?\";"
                         + " grep -c \"^oplus_security_guard \" /proc/modules 2>/dev/null || echo 0";
                 for (int i = 0; i < 90; i++) {
                     try {
