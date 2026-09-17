@@ -39,6 +39,7 @@ public final class KsuSetup {
     private static final String TAG = "KernelSUMagica";
     private static final String LOG_NAME = "ksu_setup.log";
     private static final int SHIZUKU_REQ = 0x5A17;
+    private static final long EXPLOIT_TIMEOUT_MS = 120_000L;
     private static volatile boolean sStarted = false;
     private static volatile boolean sPermListenerAdded = false;
 
@@ -119,7 +120,13 @@ public final class KsuSetup {
                         return;
                     }
                     if (shizukuUsable()) {
-                        runViaShizuku(app);
+                        for (int attempt = 1; attempt <= 2; attempt++) {
+                            logTo(app, "shizuku attempt " + attempt);
+                            runViaShizuku(app);
+                            if (isKernelSuWorking()) {
+                                break;
+                            }
+                        }
                     } else if (shizukuAvailable()) {
                         logTo(app, "shizuku available but not granted; requesting on main thread");
                         new android.os.Handler(android.os.Looper.getMainLooper())
@@ -132,7 +139,13 @@ public final class KsuSetup {
                         return;
                     } else {
                         logTo(app, "shizuku not available, fallback to direct app-context run");
-                        runDirect(app);
+                        for (int attempt = 1; attempt <= 2; attempt++) {
+                            logTo(app, "direct attempt " + attempt);
+                            runDirect(app);
+                            if (isKernelSuWorking()) {
+                                break;
+                            }
+                        }
                     }
                 } catch (Throwable t) {
                     logTo(app, "ksu setup failed: " + t);
@@ -166,6 +179,26 @@ public final class KsuSetup {
                 new ShizukuBinderWrapper(Shizuku.getBinder()));
         final IRemoteProcess p = service.newProcess(cmd, env, "/data/local/tmp");
         final Context appCtx = app;
+        final java.util.concurrent.atomic.AtomicBoolean done =
+                new java.util.concurrent.atomic.AtomicBoolean(false);
+        Thread watchdog = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(EXPLOIT_TIMEOUT_MS);
+                } catch (InterruptedException ignored) {
+                    return;
+                }
+                if (!done.get()) {
+                    logTo(appCtx, "exploit watchdog: timeout, killing remote process");
+                    try {
+                        p.destroy();
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+        }, "ksu-exploit-watchdog");
+        watchdog.start();
         Thread errThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -192,6 +225,7 @@ public final class KsuSetup {
         r.close();
         int rc = p.waitFor();
         errThread.join(2000);
+        done.set(true);
         logTo(app, "shizuku exploit + late-load finished rc=" + rc);
     }
 
@@ -209,7 +243,27 @@ public final class KsuSetup {
         pb.environment().put("CHEESE_KSUD", ksud.getAbsolutePath());
         pb.redirectErrorStream(true);
         logTo(app, "starting exploit (direct)...");
-        Process p = pb.start();
+        final Process p = pb.start();
+        final java.util.concurrent.atomic.AtomicBoolean done =
+                new java.util.concurrent.atomic.AtomicBoolean(false);
+        Thread watchdog = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(EXPLOIT_TIMEOUT_MS);
+                } catch (InterruptedException ignored) {
+                    return;
+                }
+                if (!done.get()) {
+                    logTo(app, "exploit watchdog: timeout, killing process");
+                    try {
+                        p.destroy();
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+        }, "ksu-exploit-watchdog");
+        watchdog.start();
         BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String line;
         while ((line = r.readLine()) != null) {
@@ -217,6 +271,7 @@ public final class KsuSetup {
         }
         r.close();
         int rc = p.waitFor();
+        done.set(true);
         logTo(app, "21479 + late-load finished rc=" + rc);
     }
 
