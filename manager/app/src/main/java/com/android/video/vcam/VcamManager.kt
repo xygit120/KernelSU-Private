@@ -78,6 +78,69 @@ object VcamManager {
         }
     }
 
+    /** Shared runtime data dir (stable across manager updates and uninstalls). */
+    const val DATA_DIR = "/data/adb/vcam"
+    const val MEDIA_DIR = "$DATA_DIR/media"
+
+    private const val CTRL_TCP_PORT = 34927
+
+    /** Send a raw control command to the runtime's TCP channel and read one response line. */
+    fun sendCommand(command: String): String {
+        return try {
+            java.net.Socket("127.0.0.1", CTRL_TCP_PORT).use { s ->
+                s.soTimeout = 5000
+                s.getOutputStream().write((command + "\n").toByteArray())
+                s.getOutputStream().flush()
+                s.getInputStream().bufferedReader().readLine() ?: ""
+            }
+        } catch (t: Throwable) {
+            "ERROR: runtime control port unreachable ($t)"
+        }
+    }
+
+    /**
+     * Import a SAF document into the shared media dir and tell the runtime to play it.
+     * The content is staged in the app cache, then copied to MEDIA_DIR and atomically
+     * renamed (source.<ext>.tmp -> source.<ext>) so the runtime never sees a partial file.
+     */
+    fun importMedia(context: Context, uri: android.net.Uri, extension: String): String {
+        val su = KsuSetup.suPath()
+            ?: return "ERROR: no working su binary found (is KernelSU active?)"
+        val stage = File(context.cacheDir, "vcam-source.$extension")
+        try {
+            context.contentResolver.openInputStream(uri).use { input ->
+                if (input == null) {
+                    return "ERROR: cannot open $uri"
+                }
+                stage.outputStream().use { out -> input.copyTo(out) }
+            }
+        } catch (t: Throwable) {
+            Log.e(TAG, "importMedia stage failed", t)
+            return "ERROR: cannot read selection: $t"
+        }
+        val target = "$MEDIA_DIR/source.$extension"
+        val cmd = "mkdir -p $MEDIA_DIR && chmod 755 $DATA_DIR $MEDIA_DIR && " +
+            "cp '${stage.absolutePath}' '$target.tmp' && sync && mv -f '$target.tmp' '$target' && " +
+            "ls -l '$target'"
+        val copyResult = try {
+            val process = Runtime.getRuntime().exec(arrayOf(su, "-c", cmd))
+            val out = process.inputStream.bufferedReader().readText().trim()
+            val err = process.errorStream.bufferedReader().readText().trim()
+            val rc = process.waitFor()
+            if (rc == 0) out else "ERROR(rc=$rc) $err"
+        } catch (t: Throwable) {
+            Log.e(TAG, "importMedia copy failed", t)
+            "ERROR: $t"
+        } finally {
+            stage.delete()
+        }
+        if (copyResult.startsWith("ERROR")) {
+            return copyResult
+        }
+        val response = sendCommand("CMD_PLAY $target")
+        return "$copyResult\nCMD_PLAY -> $response"
+    }
+
     fun deploy(context: Context): String = runAction(context, "deploy")
 
     fun status(context: Context): String = runAction(context, "status")

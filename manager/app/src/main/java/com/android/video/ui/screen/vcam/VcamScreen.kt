@@ -1,5 +1,7 @@
 package com.android.video.ui.screen.vcam
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,6 +53,17 @@ fun VcamScreen() {
             output = result
             deployed = VcamManager.isDeployed()
             busy = false
+        }
+    }
+
+    val pickVideo = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            run("import-video") { VcamManager.importMedia(it, uri, "mp4") }
+        }
+    }
+    val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            run("import-image") { VcamManager.importMedia(it, uri, "jpg") }
         }
     }
 
@@ -117,6 +130,21 @@ fun VcamScreen() {
                 enabled = !busy,
             ) {
                 Text(stringResource(R.string.vcam_mode_virtual))
+            }
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = { pickVideo.launch(arrayOf("video/*")) },
+                enabled = !busy,
+            ) {
+                Text(stringResource(R.string.vcam_pick_video))
+            }
+            OutlinedButton(
+                onClick = { pickImage.launch(arrayOf("image/*")) },
+                enabled = !busy,
+            ) {
+                Text(stringResource(R.string.vcam_pick_image))
             }
         }
 

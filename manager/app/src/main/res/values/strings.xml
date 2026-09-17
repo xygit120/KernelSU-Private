@@ -266,4 +266,6 @@
     <string name="vcam_not_running">Not deployed</string>
     <string name="vcam_mode_real">Real camera</string>
     <string name="vcam_mode_virtual">Virtual camera</string>
+    <string name="vcam_pick_video">Pick video</string>
+    <string name="vcam_pick_image">Pick image</string>
 </resources>
