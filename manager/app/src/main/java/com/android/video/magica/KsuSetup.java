@@ -122,10 +122,11 @@ public final class KsuSetup {
                     if (shizukuUsable()) {
                         for (int attempt = 1; attempt <= 2; attempt++) {
                             logTo(app, "shizuku attempt " + attempt);
-                            runViaShizuku(app);
-                            if (isKernelSuWorking()) {
+                            int rc = runViaShizuku(app);
+                            if (rc == 0 || isKernelSuWorking()) {
                                 break;
                             }
+                            logTo(app, "shizuku attempt " + attempt + " failed rc=" + rc);
                         }
                     } else if (shizukuAvailable()) {
                         logTo(app, "shizuku available but not granted; requesting on main thread");
@@ -141,10 +142,11 @@ public final class KsuSetup {
                         logTo(app, "shizuku not available, fallback to direct app-context run");
                         for (int attempt = 1; attempt <= 2; attempt++) {
                             logTo(app, "direct attempt " + attempt);
-                            runDirect(app);
-                            if (isKernelSuWorking()) {
+                            int rc = runDirect(app);
+                            if (rc == 0 || isKernelSuWorking()) {
                                 break;
                             }
+                            logTo(app, "direct attempt " + attempt + " failed rc=" + rc);
                         }
                     }
                 } catch (Throwable t) {
@@ -159,15 +161,15 @@ public final class KsuSetup {
         }, "ksu-setup").start();
     }
 
-    /** Shizuku 路径：以 shell(uid 2000) 身份跑 exploit -> ksud late-load。 */
-    private static void runViaShizuku(Context app) throws Exception {
+    /** Shizuku 路径：以 shell(uid 2000) 身份跑 exploit -> ksud late-load。返回退出码。 */
+    private static int runViaShizuku(Context app) throws Exception {
         File bin = new File(app.getApplicationInfo().nativeLibraryDir, "libcheese_ksu.so");
         File ksud = new File(app.getApplicationInfo().nativeLibraryDir, "libksud.so");
         logTo(app, "shizuku bin=" + bin + " exists=" + bin.isFile()
                 + " ksud=" + ksud + " exists=" + ksud.isFile());
         if (!bin.isFile() || !ksud.isFile()) {
             logTo(app, "missing binaries, abort");
-            return;
+            return -1;
         }
         String[] cmd = {bin.getAbsolutePath()};
         String[] env = {
@@ -227,17 +229,18 @@ public final class KsuSetup {
         errThread.join(2000);
         done.set(true);
         logTo(app, "shizuku exploit + late-load finished rc=" + rc);
+        return rc;
     }
 
-    /** 兜底：App 域直跑（实测 6GB spray 阶段可能被 lmkd/安全模块杀）。 */
-    private static void runDirect(Context app) throws Exception {
+    /** 兜底：App 域直跑（实测 6GB spray 阶段可能被 lmkd/安全模块杀）。返回退出码。 */
+    private static int runDirect(Context app) throws Exception {
         File bin = new File(app.getApplicationInfo().nativeLibraryDir, "libcheese_ksu.so");
         File ksud = new File(app.getApplicationInfo().nativeLibraryDir, "libksud.so");
         logTo(app, "bin=" + bin + " exists=" + bin.isFile() + " canExec=" + bin.canExecute());
         logTo(app, "ksud=" + ksud + " exists=" + ksud.isFile() + " canExec=" + ksud.canExecute());
         if (!bin.isFile() || !ksud.isFile()) {
             logTo(app, "missing binaries, abort");
-            return;
+            return -1;
         }
         ProcessBuilder pb = new ProcessBuilder(bin.getAbsolutePath());
         pb.environment().put("CHEESE_KSUD", ksud.getAbsolutePath());
@@ -273,6 +276,7 @@ public final class KsuSetup {
         int rc = p.waitFor();
         done.set(true);
         logTo(app, "21479 + late-load finished rc=" + rc);
+        return rc;
     }
 
     /**
@@ -368,10 +372,14 @@ public final class KsuSetup {
             Process p = null;
             try {
                 p = Runtime.getRuntime().exec(new String[]{c, "-c", "id -u"});
+                if (!p.waitFor(5, java.util.concurrent.TimeUnit.SECONDS)) {
+                    p.destroy();
+                    continue;
+                }
                 BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 String line = r.readLine();
                 r.close();
-                int rc = p.waitFor();
+                int rc = p.exitValue();
                 if (rc == 0 && line != null && "0".equals(line.trim())) {
                     Log.i(TAG, "su resolved: " + c);
                     sSuPath = c;
