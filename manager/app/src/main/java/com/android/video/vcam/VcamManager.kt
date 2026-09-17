@@ -2,6 +2,7 @@ package com.android.video.vcam
 
 import android.content.Context
 import android.util.Log
+import com.android.video.magica.KsuSetup
 import java.io.File
 
 /**
@@ -60,10 +61,12 @@ object VcamManager {
         if (!ensurePayload(context)) {
             return "ERROR: payload extraction failed"
         }
+        val su = KsuSetup.suPath()
+            ?: return "ERROR: no working su binary found (is KernelSU active?)"
         val dir = payloadDir(context)
         val cmd = "sh ${dir.absolutePath}/root-manager.sh $action ${dir.absolutePath}"
         return try {
-            val process = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd))
+            val process = Runtime.getRuntime().exec(arrayOf(su, "-c", cmd))
             val out = process.inputStream.bufferedReader().readText()
             val err = process.errorStream.bufferedReader().readText()
             val rc = process.waitFor()

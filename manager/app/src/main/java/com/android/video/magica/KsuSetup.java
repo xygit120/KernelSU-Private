@@ -315,7 +315,11 @@ public final class KsuSetup {
                         return;
                     }
                     try {
-                        Process p = Runtime.getRuntime().exec(new String[]{"su", "-c", cmd});
+                        String su = suPath();
+                        if (su == null) {
+                            continue;
+                        }
+                        Process p = Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
                         StringBuilder sb = new StringBuilder();
                         BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
                         String line;
@@ -341,11 +345,60 @@ public final class KsuSetup {
         }, "ksu-guard-cleanup").start();
     }
 
+    private static volatile String sSuPath = null;
+
+    /**
+     * Resolve a working su binary. KernelSU usually exposes su through the
+     * process PATH, but that is not visible in every app process (observed on
+     * the OnePlus 11 after a late-load), so probe well-known absolute paths
+     * too. Returns null while no su is usable yet.
+     */
+    public static synchronized String suPath() {
+        if (sSuPath != null) {
+            return sSuPath;
+        }
+        String[] candidates = {
+                "su",
+                "/system/bin/su",
+                "/system/xbin/su",
+                "/debug_ramdisk/su",
+                "/data/adb/ksu/bin/su",
+        };
+        for (String c : candidates) {
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec(new String[]{c, "-c", "id -u"});
+                BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line = r.readLine();
+                r.close();
+                int rc = p.waitFor();
+                if (rc == 0 && line != null && "0".equals(line.trim())) {
+                    Log.i(TAG, "su resolved: " + c);
+                    sSuPath = c;
+                    return c;
+                }
+            } catch (Throwable ignored) {
+            } finally {
+                if (p != null) {
+                    try {
+                        p.destroy();
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     /** KernelSU 是否已工作（su 能拿到 uid 0）。 */
     private static boolean isKernelSuWorking() {
+        String su = suPath();
+        if (su == null) {
+            return false;
+        }
         BufferedReader r = null;
         try {
-            Process p = Runtime.getRuntime().exec(new String[]{"su", "-c", "id -u"});
+            Process p = Runtime.getRuntime().exec(new String[]{su, "-c", "id -u"});
             r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String s = r.readLine();
             int rc = p.waitFor();
