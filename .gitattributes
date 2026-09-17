@@ -1,1 +1,3 @@
-*.bat eol=crlf
+*.sh text eol=lf
+vcam/SHA256SUMS text eol=lf
+manager/app/src/main/assets/vcam/SHA256SUMS text eol=lf
